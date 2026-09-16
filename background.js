@@ -1,9 +1,9 @@
 const categoryImages = {
-    exhibition: 'background-sources/source-01.jpg',
-    editorial: 'background-sources/source-02.jpg',
-    criticism: 'background-sources/source-03.jpg',
-    essays: 'background-sources/source-04.jpg',
-    commissioned: 'background-sources/source-10.jpg',
+    exhibition: 'svg/01.svg',
+    editorial: 'svg/02.svg',
+    criticism: 'svg/03.svg',
+    essays: 'svg/04.svg',
+    commissioned: 'svg/05.svg',
 };
 
 function preloadImages() {

@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
       linkSpan.style.maxHeight = '0';
       linkSpan.style.overflow = 'hidden';
       linkSpan.style.visibility = 'hidden';
-      linkSpan.style.transition = 'max-height 0.4s ease';
 
       let content = '';
       if (item.description) content += `<p>${item.description}</p>`;
