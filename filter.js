@@ -2,6 +2,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.list-grid');
   const filterBtns = document.querySelectorAll('.filter-btn');
 
+  function createCarousel(images) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'item-carousel';
+    wrapper.style.position = 'relative';
+    wrapper.style.width = '100%';
+    wrapper.style.marginBottom = '0.5rem';
+    wrapper.style.cursor = 'none';
+
+    let index = 0;
+
+    images.forEach((src, i) => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.style.width = '100%';
+      img.style.display = i === 0 ? 'block' : 'none';
+      wrapper.appendChild(img);
+    });
+
+    wrapper.addEventListener('mousemove', (e) => {
+      const x = e.clientX - wrapper.getBoundingClientRect().left;
+      wrapper.style.cursor = x < wrapper.offsetWidth / 2 ? 'w-resize' : 'e-resize';
+    });
+
+    wrapper.addEventListener('click', (e) => {
+      const x = e.clientX - wrapper.getBoundingClientRect().left;
+      const imgs = wrapper.querySelectorAll('img');
+      imgs[index].style.display = 'none';
+      if (x < wrapper.offsetWidth / 2) {
+        index = (index - 1 + images.length) % images.length;
+      } else {
+        index = (index + 1) % images.length;
+      }
+      imgs[index].style.display = 'block';
+    });
+
+    return wrapper;
+  }
+
   function renderItems(filter) {
     grid.innerHTML = '';
     items.forEach(item => {
@@ -48,6 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       linkSpan.innerHTML = content;
+
+      if (item.image) {
+        const images = Array.isArray(item.image) ? item.image : [item.image];
+        const carousel = createCarousel(images);
+        linkSpan.prepend(carousel);
+      }
 
       const rowElements = [span1, span2, span3, empty1, empty2, linkSpan];
 

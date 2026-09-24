@@ -1,4 +1,15 @@
 const items = [
+        {
+        date: "2026",
+        col1: "Writing",
+        col2: "Editorial",
+        col3: `Fetisj en het einde der tijden: relationele esthetiek in het Palais de Tokyo als onderdrukkings-
+mechanisme’, in <i>Simulacrum</i> 34, no. 3 (2026).`,
+        link: "",
+        description: "",
+        image: ["works/Little Man.jpg", "works/Little Man2.jpg", "works/Little Man3.jpg","works/Little Man4.jpg","works/Little Man5.jpg","works/Little Man6.jpg"]
+    },
+
     {
         date: "2026",
         col1: "Writing",

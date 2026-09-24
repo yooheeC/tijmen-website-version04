@@ -98,36 +98,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // biography 카루셀
-  const carouselImages = [
-    'img/IMG_3154.JPG',
-    'img/IMG_2591.jpg',
-    'img/IMG_2349.jpg',
-    'img/IMG_2154.jpg',
-    'img/IMG_2147.jpg',
-    'img/IMG_2080.jpg',
-    'img/IMG_2056.jpg',
-    'img/IMG_1997.jpg',
-    'img/IMG_1923.jpg',
-    'img/IMG_1602.jpg',
-    'img/IMG_1391.jpg',
-    'img/IMG_1316.jpg',
-    'img/IMG_1137.jpg',
-    'img/IMG_0884.jpg',
-    'img/IMG_0829.jpg',
-    'img/IMG_0796.jpg',
-    'img/IMG_0778.jpg',
-    'img/IMG_0647.jpg',
-    'img/IMG_0628.jpg',
-    'img/IMG_0497.jpg',
-    'img/IMG_0437.jpg',
-    'img/IMG_0286.jpg',
-    'img/IMG_0234.jpg',
-    'img/IMG_0168.jpg',
-    'img/C5F1DA31-ADA8-46C0-84FD-D5CF2D32440A 2.jpg',
-    'img/0accd2a8-0499-48da-a6f0-21b3f928f85f.png',
-    'img/ae49a633-0f09-42de-9c5c-613c13f1cba2.png',
-    'img/c2e0acae-8f9f-4938-8d35-1406fefb7985.png',
-  ];
+ const carouselImages = [
+  'img/IMG_2591.jpg',
+  'img/IMG_2349.jpg',
+  'img/IMG_2147.jpg',
+  'img/IMG_2080.jpg',
+  'img/IMG_1602.jpg',
+  'img/IMG_0892.jpg',
+  'img/IMG_0813.jpg',
+  'img/IMG_0437.jpg',
+  'img/IMG_3138.jpg',
+  'img/IMG_0611.jpg',
+  'img/IMG_9913.jpg',
+  'img/IMG_3140.jpg',
+  'img/a79286c9-a99d-4078-9504-1894856ab315.jpg',
+  'img/0accd2a8-0499-48da-a6f0-21b3f928f85f.jpg',
+  'img/IMG_0168.jpg',
+  'img/C5F1DA31-ADA8-46C0-84FD-D5CF2D32440A.jpg',
+  'img/453fe43d-1dd8-4518-b2b3-4bd9b9312204.JPG',
+  'img/0e306369-73e4-49bb-b5ae-9639d75923a2.JPG',
+  'img/IMG00137-20260228-0102.jpg',
+];
 
   let carouselIndex = 0;
   let carouselVisible = true;
