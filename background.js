@@ -1,8 +1,8 @@
 const categoryImages = {
-    exhibition: 'svg/01.svg',
-    editorial: 'svg/02.svg',
+    exhibitions: 'svg/01.svg',
+    edited: 'svg/02.svg',
     criticism: 'svg/03.svg',
-    essays: 'svg/04.svg',
+    writings: 'svg/04.svg',
     commissioned: 'svg/05.svg',
 };
 

@@ -1,6 +1,6 @@
 @media (max-width: 768px) {
     html {
-        font-size: 9px;
+        font-size: 12pt;
     }
 
     body {
@@ -10,9 +10,15 @@
     main {
         width: 100vw;
         height: 100vh;
-        padding-top: 5vh;
+        padding-left: 5vw;
+        padding-right: 5vw;
         margin-bottom: 15vh;
-        align-content: flex-start;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+    }
+
+    .topbar {
+        z-index: 999;
     }
 
     .topbar .name-btn {
@@ -22,95 +28,50 @@
     }
 
     .topbar .menu {
-        width: 100vw;
-        left: 0;
-        padding-left: 2vw;
-    }
-
-    .topbar .menu {
-    position: fixed;
-    top: 1vw;
-    left: 50%;
-    width: 50vw;
-}
-
-    .filters {
-        width: 95vw !important;
-        padding-top: 3vh;
-        padding-bottom: 3vh;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between !important;
-        gap: 0.5rem;
-    }
-
-    main .list-grid {
-    width: 95vw !important;
-    grid-template-columns: 17vw 17vw 1fr !important;
-    row-gap: 0.7rem !important;
-    }
-
-    .col1, .col2, .col3 {
-        padding-right: 0.5rem;
-    }
-
-    .imgcolumn {
         position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100vw;
-        height: auto;
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .imgcolumn img {
-        height: 20vh;
-        width: auto;
-        cursor: default;
-    }
-
-    .imgcolumn.open {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .imgcolumn.open img {
+        top: 1vw;
+        left: 50%;
         width: 50vw;
     }
 
-    .popup-btn {
-        display: block;
-        z-index: 200;
-        position: fixed;
-        right: 0;
+    .filters {
+        width: 95vw !important;
+        padding-top: 5vh;
+        padding-bottom: 5vh;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        align-items: flex-start;
+        gap: 0.5rem;
+        margin-left: 0 !important;
+        margin-right: auto !important;
     }
+
+    .filter-btn {
+        min-width: 30%;
+        min-height: 2rem;
+        text-align: left !important;
+    }
+
+    main .list-grid {
+        width: 95vw !important;
+        grid-template-columns: 1fr !important;
+        row-gap: 1rem !important;
+
+    }
+
+    .col1[style*="visibility: hidden"] {
+        display: none !important;
+        margin-bottom: -1rem;
+
+    }
+
+    .col-link a {
+        word-break: break-all;
+    }
+
 
     button {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        font-size: inherit;
-        color: inherit;
-        font-family: inherit;
-        -webkit-appearance: none;
-        appearance: none;
-    }
-
-    .intro-popup {
-        width: 80vw;
-        top: auto;
-        bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-    }
-        button {
         background: none;
         border: none;
         padding: 0;
@@ -124,32 +85,41 @@
     }
 
     .popup-btn {
+        display: block;
         position: fixed;
         right: 0;
         z-index: 200;
     }
 
-        .biography-container:not(.hidden) {
+    .biography-container {
+        width: 100vw;
+        height: auto;
+        display: block;
+    }
+
+    .biography-container:not(.hidden) .filters {
+        display: none !important;
+    }
+
+    .biography-container:not(.hidden) {
         background-color: white !important;
-        opacity: 1;
+        opacity: 1 !important;
+        z-index: 400 !important;
     }
 
-        .filters {
-        position: relative;
-        z-index: 1;
+    .biography-carousel img+p {
+        display: none;
     }
 
-    .topbar {
-        z-index: 999;
+    .biography {
+        width: 90vw;
+        margin-top: 20vh;
+        margin-bottom: 20vh;
     }
 
-    .list-grid img+p {
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-    margin-bottom: 10vh;
-}
+        .biography-container:not(.hidden) {
+        overflow-y: auto !important;
+        height: 100vh;
+    }
 
-.biography-carousel img+p {
-    display: none;
-}
 }
