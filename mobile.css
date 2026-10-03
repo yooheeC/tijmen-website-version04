@@ -122,4 +122,14 @@
         height: 100vh;
     }
 
+    .biography-container:not(.hidden) {
+    align-items: flex-start !important;
+    padding-top: 5vh;
+}
+    .biography-carousel.visible {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
 }

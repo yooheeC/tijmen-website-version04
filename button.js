@@ -1,15 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 커스텀 커서
-  const customCursor = document.createElement('div');
-  customCursor.className = 'custom-cursor';
-  document.body.appendChild(customCursor);
-  document.body.classList.add('cursor-hidden');
+  // 커스텀 커서 (데스크탑만)
+  if (window.innerWidth > 768) {
+    const customCursor = document.createElement('div');
+    customCursor.className = 'custom-cursor';
+    document.body.appendChild(customCursor);
+    document.body.classList.add('cursor-hidden');
 
-  document.addEventListener('mousemove', (e) => {
-    customCursor.style.left = `${e.clientX}px`;
-    customCursor.style.top = `${e.clientY}px`;
-  });
+    document.addEventListener('mousemove', (e) => {
+      customCursor.style.left = `${e.clientX}px`;
+      customCursor.style.top = `${e.clientY}px`;
+    });
+  }
 
   // 모바일 팝업 show/hide
   const btn = document.querySelector('.popup-btn');
@@ -77,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const filters = document.querySelector('.filters');
   const carousel = document.querySelector('.biography-carousel');
   const imgToggleBtn = document.querySelector('.img-toggle-btn');
+  const drawingsToggleBtn = document.querySelector('.drawings-toggle-btn');
 
   // biography 토글
   if (bioBtn && biographyContainer) {
@@ -87,38 +90,52 @@ document.addEventListener('DOMContentLoaded', () => {
       if (carousel) carousel.classList.toggle('visible');
       if (imgToggleBtn) imgToggleBtn.classList.toggle('visible');
 
-      if (!biographyContainer.classList.contains('hidden')) {
-        customCursor.style.display = 'none';
-        document.body.classList.remove('cursor-hidden');
-      } else {
-        customCursor.style.display = 'block';
-        document.body.classList.add('cursor-hidden');
+      // biography 열리면 drawings 버튼 숨기기
+      if (drawingsToggleBtn) {
+        if (!biographyContainer.classList.contains('hidden')) {
+          drawingsToggleBtn.style.display = 'none';
+        } else {
+          drawingsToggleBtn.style.display = 'block';
+        }
+      }
+
+      if (window.innerWidth > 768) {
+        const customCursor = document.querySelector('.custom-cursor');
+        if (customCursor) {
+          if (!biographyContainer.classList.contains('hidden')) {
+            customCursor.style.display = 'none';
+            document.body.classList.remove('cursor-hidden');
+          } else {
+            customCursor.style.display = 'block';
+            document.body.classList.add('cursor-hidden');
+          }
+        }
       }
     });
   }
 
   // biography 카루셀
- const carouselImages = [
-  'img/IMG_2591.jpg',
-  'img/IMG_2349.jpg',
-  'img/IMG_2147.jpg',
-  'img/IMG_2080.jpg',
-  'img/IMG_1602.jpg',
-  'img/IMG_0892.jpg',
-  'img/IMG_0813.jpg',
-  'img/IMG_0437.jpg',
-  'img/IMG_3138.jpg',
-  'img/IMG_0611.jpg',
-  'img/IMG_9913.jpg',
-  'img/IMG_3140.jpg',
-  'img/a79286c9-a99d-4078-9504-1894856ab315.jpg',
-  'img/0accd2a8-0499-48da-a6f0-21b3f928f85f.jpg',
-  'img/IMG_0168.jpg',
-  'img/C5F1DA31-ADA8-46C0-84FD-D5CF2D32440A.jpg',
-  'img/453fe43d-1dd8-4518-b2b3-4bd9b9312204.JPG',
-  'img/0e306369-73e4-49bb-b5ae-9639d75923a2.JPG',
-  'img/IMG00137-20260228-0102.jpg',
-];
+  const carouselImages = [
+    'img/IMG_2591.jpg',
+    'img/IMG_2349.jpg',
+    'img/IMG_2147.jpg',
+    'img/IMG_2080.jpg',
+    'img/IMG_1602.jpg',
+    'img/IMG_0892.jpg',
+    'img/IMG_0813.jpg',
+    'img/IMG_0437.jpg',
+    'img/IMG_3138.jpg',
+    'img/IMG_0611.jpg',
+    'img/IMG_9913.jpg',
+    'img/IMG_3140.jpg',
+    'img/a79286c9-a99d-4078-9504-1894856ab315.jpg',
+    'img/0accd2a8-0499-48da-a6f0-21b3f928f85f.jpg',
+    'img/IMG_0168.jpg',
+    'img/C5F1DA31-ADA8-46C0-84FD-D5CF2D32440A.jpg',
+    'img/453fe43d-1dd8-4518-b2b3-4bd9b9312204.JPG',
+    'img/0e306369-73e4-49bb-b5ae-9639d75923a2.JPG',
+    'img/IMG00137-20260228-0102.jpg',
+  ];
 
   let carouselIndex = 0;
   let carouselVisible = true;
@@ -141,11 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (biographyContainer) {
-    biographyContainer.addEventListener('mousemove', handleMouseMove);
+    if (window.innerWidth > 768) {
+      biographyContainer.addEventListener('mousemove', handleMouseMove);
 
-    biographyContainer.addEventListener('mouseleave', () => {
-      biographyContainer.style.cursor = 'default';
-    });
+      biographyContainer.addEventListener('mouseleave', () => {
+        biographyContainer.style.cursor = 'default';
+      });
+    }
 
     biographyContainer.addEventListener('click', (e) => {
       if (!carouselVisible) return;
@@ -165,17 +184,31 @@ document.addEventListener('DOMContentLoaded', () => {
       if (carousel) carousel.classList.toggle('visible');
       imgToggleBtn.textContent = carouselVisible ? 'image off' : 'image on';
 
-      if (!carouselVisible) {
-        biographyContainer.style.cursor = 'default';
-        biographyContainer.removeEventListener('mousemove', handleMouseMove);
-      } else {
-        biographyContainer.addEventListener('mousemove', handleMouseMove);
+      if (window.innerWidth > 768) {
+        if (!carouselVisible) {
+          biographyContainer.style.cursor = 'default';
+          biographyContainer.removeEventListener('mousemove', handleMouseMove);
+        } else {
+          biographyContainer.addEventListener('mousemove', handleMouseMove);
+        }
       }
     });
   }
 
-  // clicked 클래스 토글 (topbar 버튼, a 태그 - img-toggle-btn 제외)
-  document.querySelectorAll('.topbar button:not(.img-toggle-btn), a').forEach(el => {
+  if (drawingsToggleBtn) {
+    drawingsToggleBtn.addEventListener('click', () => {
+      window.drawingsEnabled = !window.drawingsEnabled;
+      drawingsToggleBtn.textContent = window.drawingsEnabled ? 'drawings off' : 'drawings on';
+      if (window.drawingsEnabled) {
+        showBackgroundImage(window.activeFilter);
+      } else {
+        clearBackgroundImage();
+      }
+    });
+  }
+
+  // clicked 클래스 토글 (topbar 버튼, a 태그 - img-toggle-btn, drawings-toggle-btn 제외)
+  document.querySelectorAll('.topbar button:not(.img-toggle-btn):not(.drawings-toggle-btn), a').forEach(el => {
     el.addEventListener('click', () => {
       el.classList.toggle('clicked');
     });

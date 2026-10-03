@@ -63,8 +63,9 @@ body {
     height: 20vh;
     position: absolute;
     top: 1vw;
-    z-index: 260;
     pointer-events: none;
+    z-index: 9999;
+
 }
 
 .topbar button {
@@ -92,6 +93,10 @@ body {
 }
 
 .img-toggle-btn.visible {
+    display: block;
+}
+
+.drawings-toggle-btn {
     display: block;
 }
 
@@ -301,13 +306,4 @@ img+p {
     margin-bottom: 10vh;
 }
 
-.biography-container:not(.hidden) {
-    align-items: flex-start !important;
-    padding-top: 5vh;
-}
-    .biography-carousel.visible {
-        position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-    }
 

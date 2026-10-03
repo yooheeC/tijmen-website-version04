@@ -6,6 +6,8 @@ const categoryImages = {
     commissioned: 'svg/05.svg',
 };
 
+window.drawingsEnabled = true;
+
 function preloadImages() {
     Object.values(categoryImages).forEach(src => {
         const img = new Image();
@@ -14,6 +16,8 @@ function preloadImages() {
 }
 
 function showBackgroundImage(filter) {
+    if (!window.drawingsEnabled) return;
+
     const img = categoryImages[filter];
 
     if (!img) {
