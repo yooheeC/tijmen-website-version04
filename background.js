@@ -1,9 +1,9 @@
 const categoryImages = {
-    exhibitions: 'svg/01.svg',
-    edited: 'svg/02.svg',
-    criticism: 'svg/03.svg',
-    writings: 'svg/04.svg',
-    commissioned: 'svg/05.svg',
+    exhibitions: 'svg/Exhibitions.svg',
+    edited: 'svg/Edited.svg',
+    criticism: 'svg/Criticism.svg',
+    writings: 'svg/Writings.svg',
+    commissioned: 'svg/Commissioned.svg',
 };
 
 window.drawingsEnabled = true;
