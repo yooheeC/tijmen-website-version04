@@ -1,9 +1,9 @@
 const categoryImages = {
-    exhibitions: { src: 'svg/Exhibitions.svg', size: '100vh auto' },
+    exhibitions: { src: 'svg/Exhibitions.svg', size: '100vw auto' },
     edited: { src: 'svg/Edited.svg', size: 'auto 100vh' },
-    criticism: { src: 'svg/Criticism.svg', size: '100vh auto' },
-    writings: { src: 'svg/Writings.svg', size: '100vh auto' },
-    commissioned: { src: 'svg/Commissioned.svg', size: '100vh auto' },
+    criticism: { src: 'svg/Criticism.svg', size: '100vw auto' },
+    writings: { src: 'svg/Writings.svg', size: '100vw auto' },
+    commissioned: { src: 'svg/Commissioned.svg', size: '100vw auto' },
 };
 
 window.drawingsEnabled = true;
