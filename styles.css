@@ -26,7 +26,7 @@ html {
     display: flex;
     justify-content: center;
     width: 100vw;
-    line-height: 1.3;
+    line-height: 1.4;
 }
 
 html {
@@ -76,7 +76,7 @@ body {
 }
 
 .topbar .name-btn {
-    position: fixed;
+    position: absolute;
     width: 15vw;
     text-align: left;
     top: 1vw;
@@ -127,7 +127,6 @@ b {
     position: fixed;
     top: 0;
     z-index: 200;
-    overflow-y: hidden;
 }
 
 .biography-carousel {
@@ -244,51 +243,6 @@ button {
     font-family: inherit;
     -webkit-appearance: none;
     appearance: none;
-}
-
-.popup-btn {
-    z-index: 200;
-    display: none;
-    right: 0;
-    position: fixed;
-}
-
-.intro-popup {
-    position: fixed;
-    width: 20vw;
-    z-index: 200;
-    top: 10%;
-    left: 60%;
-    cursor: all-scroll;
-}
-
-.intro-popup img {
-    width: 100%;
-    display: block;
-    cursor: all-scroll;
-}
-
-.intro-popup-close {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    z-index: 300;
-}
-
-.intro-popup a {
-    display: block;
-    position: relative;
-    cursor: pointer;
-}
-
-.intro-popup a::before {
-    content: '';
-    position: absolute;
-    left: 25%;
-    width: 50%;
-    height: 100%;
-    z-index: 10;
-    cursor: pointer;
 }
 
 img+p {

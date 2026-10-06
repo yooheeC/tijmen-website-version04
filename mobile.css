@@ -1,6 +1,6 @@
 @media (max-width: 768px) {
     html {
-        font-size: 12pt;
+        font-size: 14pt;
     }
 
     body {
@@ -28,15 +28,15 @@
 
     .topbar .menu {
         position: absolute;
-        top: 4vw;
+        top: 5vw;
         left: 50%;
         width: 50vw;
     }
 
     .filters {
         width: 95vw !important;
-        padding-top: 5vh;
-        padding-bottom: 5vh;
+        padding-top: 80px;
+        padding-bottom: 50px;
         display: flex !important;
         flex-wrap: wrap !important;
         justify-content: flex-start !important;
@@ -79,22 +79,6 @@
         position: static;
     }
 
-    .popup-btn {
-        display: block;
-        position: fixed;
-        right: 0;
-        z-index: 200;
-    }
-
-    .intro-popup {
-        width: 80vw;
-        top: auto;
-        bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-    }
-
     .biography-container:not(.hidden) {
         display: flex;
         flex-direction: column;
@@ -113,7 +97,7 @@
 
     .biography {
         width: 90vw;
-        margin-top: 10vh;
+        margin-top: 15vh;
         margin-bottom: 5vh;
         pointer-events: auto;
     }
