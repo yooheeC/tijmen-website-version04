@@ -280,3 +280,11 @@ img+p {
 body.bio-images-off * {
     cursor: none !important;
 }
+
+body.bio-images-off .topbar {
+    pointer-events: none;
+}
+body.bio-images-off * {
+    cursor: none !important;
+}
+

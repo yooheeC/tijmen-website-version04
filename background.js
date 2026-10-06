@@ -1,41 +1,34 @@
 const categoryImages = {
-    exhibitions: 'svg/Exhibitions.svg',
-    edited: 'svg/Edited.svg',
-    criticism: 'svg/Criticism.svg',
-    writings: 'svg/Writings.svg',
-    commissioned: 'svg/Commissioned.svg',
+    exhibitions: { src: 'svg/Exhibitions.svg', size: '100vw auto' },
+    edited: { src: 'svg/Edited.svg', size: 'auto 100vh' },
+    criticism: { src: 'svg/Criticism.svg', size: '100vw auto' },
+    writings: { src: 'svg/Writings.svg', size: '100vw auto' },
+    commissioned: { src: 'svg/Commissioned.svg', size: '100vw auto' },
 };
 
 window.drawingsEnabled = true;
 
 function preloadImages() {
-    Object.values(categoryImages).forEach(src => {
+    Object.values(categoryImages).forEach(item => {
         const img = new Image();
-        img.src = src;
+        img.src = item.src;
     });
 }
 
 function showBackgroundImage(filter) {
     if (!window.drawingsEnabled) return;
 
-    const img = categoryImages[filter];
+    const item = categoryImages[filter];
 
-    if (!img) {
+    if (!item) {
         clearBackgroundImage();
         return;
     }
 
-    if (Array.isArray(img)) {
-        document.body.style.setProperty('--bg-image', img.map(i => `url('${i}')`).join(', '));
-        document.body.style.setProperty('--bg-size', img.map(() => `auto ${window.innerHeight}px`).join(', '));
-        document.body.style.setProperty('--bg-position', img.map(() => 'center').join(', '));
-        document.body.style.setProperty('--bg-blend', img.map(() => 'multiply').join(', '));
-    } else {
-        document.body.style.setProperty('--bg-image', `url('${img}')`);
-        document.body.style.setProperty('--bg-size', `auto ${window.innerHeight}px`);
-        document.body.style.setProperty('--bg-position', 'center');
-        document.body.style.setProperty('--bg-blend', 'normal');
-    }
+    document.body.style.setProperty('--bg-image', `url('${item.src}')`);
+    document.body.style.setProperty('--bg-size', item.size);
+    document.body.style.setProperty('--bg-position', 'center');
+    document.body.style.setProperty('--bg-blend', 'normal');
 }
 
 function clearBackgroundImage() {
