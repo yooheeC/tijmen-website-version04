@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  let customCursor = null;
+  let carouselVisible = true;
+
   // 커스텀 커서 (데스크탑만)
   if (window.innerWidth > 768) {
-    const customCursor = document.createElement('div');
+    customCursor = document.createElement('div');
     customCursor.className = 'custom-cursor';
     document.body.appendChild(customCursor);
     document.body.classList.add('cursor-hidden');
@@ -10,6 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousemove', (e) => {
       customCursor.style.left = `${e.clientX}px`;
       customCursor.style.top = `${e.clientY}px`;
+    });
+
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest('.item-carousel')) {
+        customCursor.style.display = 'none';
+      } else if (!biographyContainer || biographyContainer.classList.contains('hidden')) {
+        customCursor.style.display = 'block';
+      }
     });
   }
 
@@ -80,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const carousel = document.querySelector('.biography-carousel');
   const imgToggleBtn = document.querySelector('.img-toggle-btn');
   const drawingsToggleBtn = document.querySelector('.drawings-toggle-btn');
+  const topbar = document.querySelector('.topbar');
 
   // biography 토글
   if (bioBtn && biographyContainer) {
@@ -90,6 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (carousel) carousel.classList.toggle('visible');
       if (imgToggleBtn) imgToggleBtn.classList.toggle('visible');
 
+      if (!biographyContainer.classList.contains('hidden')) {
+        document.body.style.overflow = 'hidden';
+        if (topbar) topbar.style.position = 'absolute';
+      } else {
+        document.body.style.overflow = '';
+        if (topbar) topbar.style.position = '';
+      }
+
       if (drawingsToggleBtn) {
         if (!biographyContainer.classList.contains('hidden')) {
           drawingsToggleBtn.style.display = 'none';
@@ -99,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (window.innerWidth > 768) {
-        const customCursor = document.querySelector('.custom-cursor');
         if (customCursor) {
           if (!biographyContainer.classList.contains('hidden')) {
             customCursor.style.display = 'none';
@@ -107,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             customCursor.style.display = 'block';
             document.body.classList.add('cursor-hidden');
+            document.documentElement.style.removeProperty('cursor');
           }
         }
       }
@@ -137,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   let carouselIndex = 0;
-  let carouselVisible = true;
 
   function updateCarousel() {
     if (carousel) {
@@ -156,19 +175,20 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleMouseMove(e) {
     const x = e.clientX;
     if (x < window.innerWidth / 2) {
-      biographyContainer.style.cursor = 'w-resize';
+      biographyContainer.style.setProperty('cursor', 'w-resize', 'important');
     } else {
-      biographyContainer.style.cursor = 'e-resize';
+      biographyContainer.style.setProperty('cursor', 'e-resize', 'important');
     }
+  }
+
+  function handleMouseLeave() {
+    biographyContainer.style.removeProperty('cursor');
   }
 
   if (biographyContainer) {
     if (window.innerWidth > 768) {
       biographyContainer.addEventListener('mousemove', handleMouseMove);
-
-      biographyContainer.addEventListener('mouseleave', () => {
-        biographyContainer.style.cursor = 'default';
-      });
+      biographyContainer.addEventListener('mouseleave', handleMouseLeave);
     }
 
     biographyContainer.addEventListener('click', (e) => {
@@ -191,10 +211,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (window.innerWidth > 768) {
         if (!carouselVisible) {
-          biographyContainer.style.cursor = 'default';
+          biographyContainer.style.removeProperty('cursor');
           biographyContainer.removeEventListener('mousemove', handleMouseMove);
+          biographyContainer.classList.add('images-off');
+          if (customCursor) {
+            customCursor.style.display = 'block';
+            document.body.classList.add('cursor-hidden');
+          }
         } else {
           biographyContainer.addEventListener('mousemove', handleMouseMove);
+          biographyContainer.classList.remove('images-off');
+          if (customCursor) {
+            customCursor.style.display = 'none';
+            document.body.classList.remove('cursor-hidden');
+          }
         }
       }
     });
@@ -213,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // clicked 클래스 토글 (topbar 버튼, a 태그 - img-toggle-btn, drawings-toggle-btn 제외)
-  document.querySelectorAll('.topbar button:not(.img-toggle-btn):not(.drawings-toggle-btn), a').forEach(el => {
+  // clicked 클래스 토글 (topbar 버튼, a 태그 - img-toggle-btn, drawings-toggle-btn, bio 제외)
+  document.querySelectorAll('.topbar button:not(.img-toggle-btn):not(.drawings-toggle-btn):not(.bio), a').forEach(el => {
     el.addEventListener('click', () => {
       el.classList.toggle('clicked');
     });

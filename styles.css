@@ -8,6 +8,23 @@ body.cursor-hidden * {
     cursor: none !important;
 }
 
+body.cursor-hidden .biography-container:not(.hidden) {
+    cursor: w-resize !important;
+}
+
+body.cursor-hidden .item-carousel div {
+    cursor: w-resize !important;
+}
+
+body.cursor-hidden .item-carousel div:last-child {
+    cursor: e-resize !important;
+}
+
+.biography-container.images-off,
+.biography-container.images-off * {
+    cursor: none !important;
+}
+
 .custom-cursor {
     position: fixed;
     width: 5px;
@@ -20,17 +37,13 @@ body.cursor-hidden * {
 }
 
 html {
-    font-size: 20px;
+    font-size: clamp(14px, 1.5vw, 20px);
     font-family: "ltc-caslon-pro", serif;
     color: black;
     display: flex;
     justify-content: center;
     width: 100vw;
     line-height: 1.4;
-}
-
-html {
-    font-size: clamp(14px, 1.5vw, 20px);
 }
 
 ::selection {
@@ -64,11 +77,10 @@ body {
 .topbar {
     width: 100vw;
     height: 20vh;
-    position: absolute;
     top: 1vw;
+    position: absolute;
     pointer-events: none;
-    z-index: 9999;
-
+    z-index: 999 !important;
 }
 
 .topbar button {
@@ -77,9 +89,7 @@ body {
 
 .topbar .name-btn {
     position: absolute;
-    width: 15vw;
     text-align: left;
-    top: 1vw;
     left: 1vw;
     z-index: 250;
 }
@@ -87,7 +97,6 @@ body {
 .topbar .menu {
     width: 50vw;
     position: absolute;
-    top: 0;
     left: 15vw;
 }
 
@@ -107,7 +116,6 @@ b {
     font-weight: 600;
 }
 
-
 .biography-container {
     display: none;
     overflow-y: scroll;
@@ -126,7 +134,12 @@ b {
     align-items: center;
     position: fixed;
     top: 0;
-    z-index: 200;
+    z-index: 100 !important;
+    cursor: w-resize;
+}
+
+.biography-container:not(.hidden) * {
+    cursor: inherit;
 }
 
 .biography-carousel {
@@ -194,7 +207,6 @@ main {
     z-index: 300;
 }
 
-
 main .list-grid {
     width: 70vw;
     display: grid;
@@ -214,9 +226,8 @@ main .list-grid {
     padding-bottom: 0.5rem;
 }
 
-
 .col-link p {
-margin-bottom: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 .hidden {
@@ -231,7 +242,6 @@ a {
 a:hover, .topbar button:hover, .filter-btn:hover {
     color: blue;
 }
-
 
 button {
     background: none;
@@ -260,4 +270,9 @@ img+p {
     border-bottom: 1px solid currentColor;
     padding-bottom: 1px;
     text-decoration: none;
+}
+
+.bio.active {
+    border-bottom: 1px solid black;
+    padding-bottom: 1px;
 }

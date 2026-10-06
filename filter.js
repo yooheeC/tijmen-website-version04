@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.style.position = 'relative';
     wrapper.style.width = '100%';
     wrapper.style.marginBottom = '0.5rem';
-    wrapper.style.cursor = 'none';
 
     let index = 0;
 
@@ -20,22 +19,28 @@ document.addEventListener('DOMContentLoaded', () => {
       wrapper.appendChild(img);
     });
 
-    wrapper.addEventListener('mousemove', (e) => {
-      const x = e.clientX - wrapper.getBoundingClientRect().left;
-      wrapper.style.cursor = x < wrapper.offsetWidth / 2 ? 'w-resize' : 'e-resize';
-    });
+    const leftZone = document.createElement('div');
+    leftZone.style.cssText = 'position:absolute;left:0;top:0;width:50%;height:100%;z-index:1;cursor:w-resize;';
 
-    wrapper.addEventListener('click', (e) => {
-      const x = e.clientX - wrapper.getBoundingClientRect().left;
+    const rightZone = document.createElement('div');
+    rightZone.style.cssText = 'position:absolute;right:0;top:0;width:50%;height:100%;z-index:1;cursor:e-resize;';
+
+    leftZone.addEventListener('click', () => {
       const imgs = wrapper.querySelectorAll('img');
       imgs[index].style.display = 'none';
-      if (x < wrapper.offsetWidth / 2) {
-        index = (index - 1 + images.length) % images.length;
-      } else {
-        index = (index + 1) % images.length;
-      }
+      index = (index - 1 + images.length) % images.length;
       imgs[index].style.display = 'block';
     });
+
+    rightZone.addEventListener('click', () => {
+      const imgs = wrapper.querySelectorAll('img');
+      imgs[index].style.display = 'none';
+      index = (index + 1) % images.length;
+      imgs[index].style.display = 'block';
+    });
+
+    wrapper.appendChild(leftZone);
+    wrapper.appendChild(rightZone);
 
     return wrapper;
   }
@@ -90,8 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const hasDescription = item.description && item.description !== '';
       const hasLink = item.link && item.link !== '';
+      const hasImage = item.image && (Array.isArray(item.image) ? item.image[0] !== '' : item.image !== '');
       const hasBoth = hasDescription && hasLink;
-      const hasContent = hasDescription || hasLink;
+      const hasContent = hasDescription || hasLink || hasImage;
 
       let content = '';
       if (hasDescription) {

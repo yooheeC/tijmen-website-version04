@@ -1,6 +1,10 @@
 @media (max-width: 768px) {
     html {
         font-size: 14pt;
+        font-family: "ltc-caslon-pro", 'Times New Roman', serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-weight: 500;
     }
 
     body {
@@ -9,6 +13,7 @@
 
     main {
         width: 100vw;
+        padding-top: 50px;
         padding-left: 5vw;
         padding-right: 5vw;
         margin-bottom: 15vh;
@@ -17,25 +22,32 @@
     }
 
     .topbar {
+        width: 100vw;
+        padding: 5vw;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        position: relative;
         z-index: 999;
     }
 
     .topbar .name-btn {
-        width: 40vw;
-        top: 5vw;
-        left: 5vw;
+        position: relative;
+        width: 100%;
+        left: 0;
+        text-align: left;
+        margin-bottom: 10px;
     }
 
     .topbar .menu {
-        position: absolute;
-        top: 5vw;
-        left: 50%;
-        width: 50vw;
+        left: 0;
+        width: 100%;
+        position: relative;
     }
 
     .filters {
         width: 95vw !important;
-        padding-top: 80px;
+        padding-top: 10px;
         padding-bottom: 50px;
         display: flex !important;
         flex-wrap: wrap !important;
@@ -80,24 +92,22 @@
     }
 
     .biography-container:not(.hidden) {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100vw;
         height: 100vh;
-        overflow-y: auto;
+        display: block;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
         background-color: white !important;
-        opacity: 1 !important;
         z-index: 400 !important;
-        padding-top: 5vh;
-        padding-left: 5vw;
-        padding-right: 5vw;
-        justify-content: flex-start;
+        padding: 5vh 5vw;
     }
 
     .biography {
-        width: 90vw;
-        margin-top: 15vh;
+        width: 100%;
+        padding-top: 15vh;
         margin-bottom: 5vh;
         pointer-events: auto;
     }
@@ -107,25 +117,31 @@
         top: auto !important;
         left: auto !important;
         transform: none !important;
-        width: calc(100vw) !important;
+        width: 100% !important;
         height: auto !important;
-        margin-left: -5vw;
         display: block !important;
+        margin-bottom: 5vh;
     }
 
     .biography-carousel img {
+        display: none;
         position: relative !important;
-        opacity: 0;
         width: 100% !important;
         height: auto !important;
         object-fit: contain;
+        opacity: 1;
     }
 
     .biography-carousel img.active {
-        opacity: 1;
+        display: block;
     }
 
     .biography-carousel img+p {
         display: none;
+    }
+
+    .biography-container:not(.hidden) ~ .topbar,
+    .biography-container:not(.hidden) + .topbar {
+        position: absolute !important;
     }
 }
