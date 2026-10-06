@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (carousel) carousel.classList.toggle('visible');
       if (imgToggleBtn) imgToggleBtn.classList.toggle('visible');
 
-      // biography 열리면 drawings 버튼 숨기기
       if (drawingsToggleBtn) {
         if (!biographyContainer.classList.contains('hidden')) {
           drawingsToggleBtn.style.display = 'none';
@@ -142,8 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateCarousel() {
     if (carousel) {
+      const isMobile = window.innerWidth <= 768;
       carousel.querySelectorAll('img').forEach((img, i) => {
-        img.classList.toggle('active', i === carouselIndex);
+        if (isMobile) {
+          img.style.display = i === carouselIndex ? 'block' : 'none';
+          img.style.opacity = '1';
+        } else {
+          img.classList.toggle('active', i === carouselIndex);
+        }
       });
     }
   }
@@ -195,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // drawings 토글
   if (drawingsToggleBtn) {
     drawingsToggleBtn.addEventListener('click', () => {
       window.drawingsEnabled = !window.drawingsEnabled;

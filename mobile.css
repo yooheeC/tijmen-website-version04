@@ -28,7 +28,7 @@
 
     .topbar .menu {
         position: absolute;
-        top: 5vw;
+        top: 4vw;
         left: 50%;
         width: 50vw;
     }
@@ -56,19 +56,15 @@
         width: 95vw !important;
         grid-template-columns: 1fr !important;
         row-gap: 1rem !important;
-
     }
 
     .col1[style*="visibility: hidden"] {
         display: none !important;
-        margin-bottom: -1rem;
-
     }
 
     .col-link a {
         word-break: break-all;
     }
-
 
     button {
         background: none;
@@ -90,45 +86,62 @@
         z-index: 200;
     }
 
-    .biography-container {
-        width: 100vw;
-        height: auto;
-        display: block;
-    }
-
-    .biography-container:not(.hidden) .filters {
-        display: none !important;
+    .intro-popup {
+        width: 80vw;
+        top: auto;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
     }
 
     .biography-container:not(.hidden) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100vw;
+        height: 100vh;
+        overflow-y: auto;
         background-color: white !important;
         opacity: 1 !important;
         z-index: 400 !important;
+        padding-top: 5vh;
+        padding-left: 5vw;
+        padding-right: 5vw;
+        justify-content: flex-start;
+    }
+
+    .biography {
+        width: 90vw;
+        margin-top: 10vh;
+        margin-bottom: 5vh;
+        pointer-events: auto;
+    }
+
+    .biography-carousel.visible {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        width: calc(100vw) !important;
+        height: auto !important;
+        margin-left: -5vw;
+        display: block !important;
+    }
+
+    .biography-carousel img {
+        position: relative !important;
+        opacity: 0;
+        width: 100% !important;
+        height: auto !important;
+        object-fit: contain;
+    }
+
+    .biography-carousel img.active {
+        opacity: 1;
     }
 
     .biography-carousel img+p {
         display: none;
     }
-
-    .biography {
-        width: 90vw;
-        margin-top: 20vh;
-        margin-bottom: 20vh;
-    }
-
-        .biography-container:not(.hidden) {
-        overflow-y: auto !important;
-        height: 100vh;
-    }
-
-    .biography-container:not(.hidden) {
-    align-items: flex-start !important;
-    padding-top: 5vh;
-}
-    .biography-carousel.visible {
-        position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
 }
