@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (hasLink) {
         if (Array.isArray(item.link)) {
           item.link.forEach((l, index) => {
-            content += `<a href="${l}" target="_blank">${index + 1}. ${l}</a><br>`;
+            content += `<a href="${l}" target="_blank">${index + 1}. ${l}</a><div style="height: 0.3em;"></div>`;
           });
         } else {
           content += `<a href="${item.link}" target="_blank">${item.link}</a>`;
