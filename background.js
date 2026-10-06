@@ -25,8 +25,10 @@ function showBackgroundImage(filter) {
         return;
     }
 
+    const size = window.innerWidth <= 768 ? 'auto 100vh' : item.size;
+
     document.body.style.setProperty('--bg-image', `url('${item.src}')`);
-    document.body.style.setProperty('--bg-size', item.size);
+    document.body.style.setProperty('--bg-size', size);
     document.body.style.setProperty('--bg-position', 'center');
     document.body.style.setProperty('--bg-blend', 'normal');
 }
