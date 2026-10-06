@@ -276,3 +276,7 @@ img+p {
     border-bottom: 1px solid black;
     padding-bottom: 1px;
 }
+
+body.bio-images-off * {
+    cursor: none !important;
+}
