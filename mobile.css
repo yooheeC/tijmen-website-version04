@@ -107,12 +107,12 @@
 
     .biography {
         width: 100%;
-        padding-top: 150px;
         margin-bottom: 5vh;
         pointer-events: auto;
     }
 
     .biography-carousel.visible {
+        margin-top: 200px;
         position: relative !important;
         top: auto !important;
         left: auto !important;
@@ -120,7 +120,7 @@
         width: 100% !important;
         height: auto !important;
         display: block !important;
-        margin-bottom: 150px;
+        margin-bottom: 30px;
     }
 
     .biography-carousel img {

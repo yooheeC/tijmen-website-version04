@@ -77,8 +77,8 @@ body {
 .topbar {
     width: 100vw;
     height: 20vh;
+    position: sticky;
     top: 1vw;
-    position: absolute;
     pointer-events: none;
     z-index: 999 !important;
 }
@@ -88,7 +88,6 @@ body {
 }
 
 .topbar .name-btn {
-    position: absolute;
     text-align: left;
     left: 1vw;
     z-index: 250;
@@ -96,7 +95,6 @@ body {
 
 .topbar .menu {
     width: 50vw;
-    position: absolute;
     left: 15vw;
 }
 
@@ -148,7 +146,6 @@ b {
 
 .biography-carousel.visible {
     display: block;
-    position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
@@ -158,7 +155,6 @@ b {
 }
 
 .biography-carousel img {
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
