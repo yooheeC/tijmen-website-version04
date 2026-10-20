@@ -76,9 +76,13 @@ body {
 
 .topbar {
     width: 100vw;
-    height: 20vh;
+    height: 7vh;
     position: sticky;
-    top: 1vw;
+    padding-top: 1vw;
+    padding-left: 1vw;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
     pointer-events: none;
     z-index: 999 !important;
 }
@@ -91,11 +95,12 @@ body {
     text-align: left;
     left: 1vw;
     z-index: 250;
+    width: 14vw;
 }
 
 .topbar .menu {
-    width: 50vw;
-    left: 15vw;
+    width: 85vw;
+    padding:0;
 }
 
 .img-toggle-btn {
@@ -128,6 +133,19 @@ b {
     height: 100vh;
     background-color: white;
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 100 !important;
+    cursor: w-resize;
+}
+.biography-container:not(.hidden) {
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    display: flex;
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -136,16 +154,9 @@ b {
     cursor: w-resize;
 }
 
-.biography-container:not(.hidden) * {
-    cursor: inherit;
-}
-
-.biography-carousel {
-    display: none;
-}
-
 .biography-carousel.visible {
     display: block;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
@@ -155,6 +166,7 @@ b {
 }
 
 .biography-carousel img {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -177,7 +189,6 @@ b {
 .biography p, .biography a {
     pointer-events: auto;
 }
-
 main {
     width: 100vw;
     display: flex;

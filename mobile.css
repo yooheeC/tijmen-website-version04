@@ -23,6 +23,7 @@
 
     .topbar {
         width: 100vw;
+        height: 10vh;
         padding: 5vw;
         display: flex;
         flex-direction: column;
@@ -97,39 +98,35 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        display: block;
+        display: flex;
+        flex-direction: column;
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
         background-color: white !important;
-        z-index: 400 !important;
+        z-index: 1400 !important;
         padding: 5vh 5vw;
     }
 
     .biography {
+        display: block;
+        margin-top: 60vh;
         width: 100%;
         margin-bottom: 5vh;
         pointer-events: auto;
     }
 
-    .biography-carousel.visible {
-        margin-top: 200px;
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        transform: none !important;
-        width: 100% !important;
-        height: auto !important;
-        display: block !important;
-        margin-bottom: 30px;
+    .biography-container .biography-carousel.visible {
+        position: relative;
+        position: block;
+        height: 60vw !important;
+        overflow: hidden;
     }
 
     .biography-carousel img {
-        display: none;
-        position: relative !important;
         width: 100% !important;
-        height: auto !important;
+        height: 60vw !important;
         object-fit: contain;
-        opacity: 1;
+        object-position: top;
     }
 
     .biography-carousel img.active {

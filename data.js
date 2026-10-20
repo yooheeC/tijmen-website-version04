@@ -1,15 +1,6 @@
 const items = [
   {
     date: "2027",
-    category: "exhibitions",
-    col1: "Exhibitions",
-    col2: `Minne Kersten: <i>True Story</i>, co-curated with Elena van den Boogerd, expected April 2027.`,
-    link: "",
-    description: "",
-    image: ""
-  },
-  {
-    date: "2027",
     category: "edited",
     col1: "Edited",
     col2: `\u2018The Scene.\u2019 <i>Simulacrum Magazine</i> 35, no. 2 (2027).`,

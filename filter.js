@@ -63,7 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
       span1.textContent = item.col1;
 
       if (isMobile) {
-        span1.style.marginBottom = '-0.8rem';
+        if (filter !== 'all') {
+          span1.style.display = 'none';
+        } else {
+          span1.style.marginBottom = '-0.8rem';
+        }
       }
 
       const span2 = document.createElement('span');
