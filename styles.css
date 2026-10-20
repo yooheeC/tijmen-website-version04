@@ -77,17 +77,34 @@ body {
 .topbar {
     width: 100vw;
     height: 7vh;
-    position: sticky;
+    position: absolute;
     padding-top: 1vw;
     padding-left: 1vw;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     pointer-events: none;
-    z-index: 999 !important;
+    z-index: 99 !important;
+}
+
+.biography-container .bio-topbar {
+    width: 100vw;
+    height: 7vw;
+    position: fixed;
+    top:0;
+    padding-top: 1vw;
+    padding-left: 1vw;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    pointer-events: none;
 }
 
 .topbar button {
+    pointer-events: auto;
+}
+
+.bio-topbar button {
     pointer-events: auto;
 }
 
@@ -98,7 +115,19 @@ body {
     width: 14vw;
 }
 
+.bio-topbar .name-btn {
+    text-align: left;
+    left: 1vw;
+    z-index: 250;
+    width: 14vw;
+}
+
 .topbar .menu {
+    width: 85vw;
+    padding:0;
+}
+
+.bio-topbar .menu {
     width: 85vw;
     padding:0;
 }

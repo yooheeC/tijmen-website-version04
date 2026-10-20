@@ -23,13 +23,12 @@
 
     .topbar {
         width: 100vw;
-        height: 10vh;
         padding: 5vw;
         display: flex;
         flex-direction: column;
         height: auto;
         position: relative;
-        z-index: 999;
+        z-index: 100;
     }
 
     .topbar .name-btn {
@@ -41,6 +40,20 @@
     }
 
     .topbar .menu {
+        left: 0;
+        width: 100%;
+        position: relative;
+    }
+
+    .bio-topbar .name-btn {
+        position: relative;
+        width: 100%;
+        left: 0;
+        text-align: left;
+        margin-bottom: 0px;
+    }
+
+    .bio-topbar .menu {
         left: 0;
         width: 100%;
         position: relative;
@@ -98,38 +111,49 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        display: flex;
-        flex-direction: column;
+        display: block !important;
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
         background-color: white !important;
         z-index: 1400 !important;
-        padding: 5vh 5vw;
+        padding: 0;
+        cursor: default !important;
     }
 
-    .biography {
-        display: block;
-        margin-top: 60vh;
+    .biography-container:not(.hidden) * {
+        cursor: default !important;
+    }
+
+    .biography-container .bio-topbar {
         width: 100%;
-        margin-bottom: 5vh;
-        pointer-events: auto;
-    }
-
-    .biography-container .biography-carousel.visible {
+        height: 200px;
+        padding: 5vw;
+        display: block;
         position: relative;
-        position: block;
-        height: 60vw !important;
-        overflow: hidden;
     }
 
-    .biography-carousel img {
-        width: 100% !important;
-        height: 60vw !important;
-        object-fit: contain;
-        object-position: top;
-    }
+    .biography-container .biography-carousel {
+    display: block !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    height: 56vw !important;
+    overflow: hidden !important;
+}
 
-    .biography-carousel img.active {
+.biography-container .biography-carousel img {
+    position: relative !important;
+    width: 100% !important;
+    height: 56vw !important;
+    object-fit: contain;
+    object-position: center;
+    display: none;
+    opacity: 1;
+}
+
+    .biography-container .biography-carousel img.active {
         display: block;
     }
 
@@ -137,9 +161,12 @@
         display: none;
     }
 
-    .biography-container:not(.hidden) ~ .topbar,
-    .biography-container:not(.hidden) + .topbar {
-        position: absolute !important;
+    .biography-container .biography {
+        display: block;
+        width: 100%;
+        padding: 5vw;
+        margin: 0;
+        pointer-events: auto;
     }
 
     .img-toggle-btn {
@@ -148,13 +175,5 @@
 
     .custom-cursor {
         display: none !important;
-    }
-
-    .biography-container:not(.hidden) {
-        cursor: default !important;
-    }
-
-    .biography-container:not(.hidden) * {
-        cursor: default !important;
     }
 }
