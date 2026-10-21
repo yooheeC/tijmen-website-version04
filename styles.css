@@ -176,22 +176,30 @@ body.bio-open .topbar {
     visibility: hidden;
 }
 
+/* Both toggles stay in the layout at all times and are only made
+   invisible — the topbars have no fixed height, so removing a button
+   would change their height and push everything below it. */
+
+/* Drawings toggle: only a filter other than "All" brings it out. */
 .drawings-toggle-btn {
     display: block;
+    visibility: hidden;
     color: blue;
 }
 
-body.bio-open .drawings-toggle-btn {
-    display: none;
+body:has(.filter-btn.active:not([data-filter="all"])):not(.bio-open) .drawings-toggle-btn {
+    visibility: visible;
 }
 
+/* Images toggle: button.js sets .visible while the modal is open. */
 .img-toggle-btn {
-    display: none;
+    display: block;
+    visibility: hidden;
     color: blue;
 }
 
 .img-toggle-btn.visible {
-    display: block;
+    visibility: visible;
 }
 
 /* ==========================================================================
@@ -226,10 +234,10 @@ body.bio-open .drawings-toggle-btn {
 
 .biography {
     position: relative;
-    width: 70vw;         /* centres in the space left by the bio-topbar */
+    width: 70vw;
+    margin: auto 0;          /* centres in the space left by the bio-topbar */
     pointer-events: none;
     z-index: 201;
-    margin: auto 0;  
 }
 
 .biography p,
@@ -321,8 +329,19 @@ main .list-grid {
     padding-right: 1rem;
 }
 
-.col3.clickable {
+/* Only items carrying a link, description or image react to the cursor */
+.list-grid .col2.clickable {
     cursor: pointer;
+}
+
+.list-grid .col2.clickable:hover {
+    color: blue;
+}
+
+/* Once the drawer is open the title stops reacting —
+   from then on each link highlights on its own (global a:hover) */
+.list-grid .col2.clickable.open:hover {
+    color: inherit;
 }
 
 .col-link {
@@ -345,28 +364,19 @@ img + p {
     margin-bottom: 10vh;
 }
 
-/* 링크·설명·이미지가 있는 항목만 반응 */
-.list-grid .col2.clickable {
-    cursor: pointer;
-}
-
-.list-grid .col2.clickable:hover {
-    color: blue;
-}
-
-/* 서랍이 열리면 제목은 더 이상 반응하지 않음 */
-.list-grid .col2.clickable.open:hover {
-    color: inherit;
-}
+/* ==========================================================================
+   Credit
+   ========================================================================== */
 
 .credit {
     width: 70vw;
     font-size: 0.8rem;
     padding-top: 5vh;
-    text-align: end;
+    text-align: start;
 }
 
-
+/* Hidden whenever a filter other than "All" is active.
+   Sits at the end of the page, so removing it shifts nothing above. */
 .filters:has(.filter-btn.active:not([data-filter="all"])) ~ .credit {
     display: none;
 }
