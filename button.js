@@ -1,10 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  let customCursor = null;
-  let carouselVisible = true;
+  const isDesktop = () => window.innerWidth > 768;
 
-  // 커스텀 커서 (데스크탑만)
-  if (window.innerWidth > 768) {
+  /* ---------------------------------------------------------------
+     Elements
+  --------------------------------------------------------------- */
+  const bioBtns           = document.querySelectorAll('.bio');
+  const biographyContainer = document.querySelector('.biography-container');
+  const filters           = document.querySelector('.filters');
+  const carousel          = document.querySelector('.biography-carousel');
+  const imgToggleBtn      = document.querySelector('.bio-topbar .img-toggle-btn');
+  const drawingsToggleBtn = document.querySelector('.topbar .drawings-toggle-btn');
+
+  /* ---------------------------------------------------------------
+     State
+  --------------------------------------------------------------- */
+  let customCursor    = null;
+  let carouselVisible = true;   // carousel images on/off (desktop only)
+  let carouselIndex   = 0;
+
+  if (window.drawingsEnabled === undefined) window.drawingsEnabled = true;
+
+  /* ---------------------------------------------------------------
+     Custom cursor (desktop only)
+  --------------------------------------------------------------- */
+  if (isDesktop()) {
     customCursor = document.createElement('div');
     customCursor.className = 'custom-cursor';
     document.body.appendChild(customCursor);
@@ -12,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('mousemove', (e) => {
       customCursor.style.left = `${e.clientX}px`;
-      customCursor.style.top = `${e.clientY}px`;
+      customCursor.style.top  = `${e.clientY}px`;
     });
 
     document.addEventListener('mouseover', (e) => {
@@ -24,41 +44,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 모바일 팝업 show/hide
-  const btn = document.querySelector('.popup-btn');
+  /* ---------------------------------------------------------------
+     Mobile popup show/hide
+  --------------------------------------------------------------- */
+  const popupBtn = document.querySelector('.popup-btn');
   const imgcolumn = document.querySelector('.imgcolumn');
 
-  if (btn && imgcolumn) {
-    btn.addEventListener('click', () => {
-      imgcolumn.classList.toggle('open');
-      btn.textContent = imgcolumn.classList.contains('open') ? 'hide' : 'show';
+  if (popupBtn && imgcolumn) {
+    popupBtn.addEventListener('click', () => {
+      const open = imgcolumn.classList.toggle('open');
+      popupBtn.textContent = open ? 'hide' : 'show';
     });
   }
 
-  // intro 팝업 닫기
+  /* ---------------------------------------------------------------
+     Intro popup — close + drag
+  --------------------------------------------------------------- */
   const introClose = document.querySelector('.intro-popup-close');
-  const popup = document.querySelector('.intro-popup');
+  const popup      = document.querySelector('.intro-popup');
 
   if (introClose && popup) {
     introClose.addEventListener('click', () => {
       popup.style.display = 'none';
     });
 
-    const popupLink = document.querySelector('.intro-popup a');
+    const popupLink = popup.querySelector('a');
     let isDragging = false;
-    let hasMoved = false;
-    let startX, startY;
+    let hasMoved   = false;
+    let startX = 0;
+    let startY = 0;
 
     popup.addEventListener('mousedown', (e) => {
       const rect = popup.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
-      const centerStart = rect.width * 0.25;
-      const centerEnd = rect.width * 0.75;
 
-      if (clickX < centerStart || clickX > centerEnd) {
+      // drag from the outer quarters only, so the centre stays clickable
+      if (clickX < rect.width * 0.25 || clickX > rect.width * 0.75) {
         isDragging = true;
-        hasMoved = false;
-        startX = e.clientX - rect.left;
+        hasMoved   = false;
+        startX = clickX;
         startY = e.clientY - rect.top;
         e.preventDefault();
       }
@@ -68,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isDragging) return;
       hasMoved = true;
       popup.style.left = `${e.clientX - startX}px`;
-      popup.style.top = `${e.clientY - startY}px`;
+      popup.style.top  = `${e.clientY - startY}px`;
       popup.style.transform = 'none';
     });
 
@@ -76,64 +100,19 @@ document.addEventListener('DOMContentLoaded', () => {
       isDragging = false;
     });
 
-    popupLink.addEventListener('click', (e) => {
-      if (hasMoved) {
-        e.preventDefault();
-        hasMoved = false;
-      }
-    });
+    if (popupLink) {
+      popupLink.addEventListener('click', (e) => {
+        if (hasMoved) {
+          e.preventDefault();
+          hasMoved = false;
+        }
+      });
+    }
   }
 
-  // 모든 요소 선언
-  const bioBtn = document.querySelector('.bio');
-  const biographyContainer = document.querySelector('.biography-container');
-  const filters = document.querySelector('.filters');
-  const carousel = document.querySelector('.biography-carousel');
-  const imgToggleBtn = document.querySelector('.img-toggle-btn');
-  const drawingsToggleBtn = document.querySelector('.drawings-toggle-btn');
-  const topbar = document.querySelector('.topbar');
-
-  // biography 토글
-  if (bioBtn && biographyContainer) {
-    bioBtn.addEventListener('click', () => {
-      biographyContainer.classList.toggle('hidden');
-      bioBtn.classList.toggle('active');
-      if (filters) filters.classList.toggle('hidden');
-      if (carousel) carousel.classList.toggle('visible');
-      if (imgToggleBtn) imgToggleBtn.classList.toggle('visible');
-
-      if (!biographyContainer.classList.contains('hidden')) {
-        document.body.style.overflow = 'hidden';
-        if (topbar) topbar.style.position = 'absolute';
-      } else {
-        document.body.style.overflow = '';
-        if (topbar) topbar.style.position = '';
-      }
-
-      if (drawingsToggleBtn) {
-        if (!biographyContainer.classList.contains('hidden')) {
-          drawingsToggleBtn.style.display = 'none';
-        } else {
-          drawingsToggleBtn.style.display = 'block';
-        }
-      }
-
-      if (window.innerWidth > 768) {
-        if (customCursor) {
-          if (!biographyContainer.classList.contains('hidden')) {
-            customCursor.style.display = 'none';
-            document.body.classList.remove('cursor-hidden');
-          } else {
-            customCursor.style.display = 'block';
-            document.body.classList.add('cursor-hidden');
-            document.documentElement.style.removeProperty('cursor');
-          }
-        }
-      }
-    });
-  }
-
-  // biography 카루셀
+  /* ---------------------------------------------------------------
+     Biography carousel
+  --------------------------------------------------------------- */
   const carouselImages = [
     'img/IMG_2591.jpg',
     'img/IMG_2349.jpg',
@@ -156,45 +135,96 @@ document.addEventListener('DOMContentLoaded', () => {
     'img/IMG00137-20260228-0102.jpg',
   ];
 
-  let carouselIndex = 0;
-
   function updateCarousel() {
-    if (carousel) {
-      const isMobile = window.innerWidth <= 768;
-      carousel.querySelectorAll('img').forEach((img, i) => {
-        if (isMobile) {
-          img.style.display = i === carouselIndex ? 'block' : 'none';
-          img.style.opacity = '1';
-        } else {
-          img.classList.toggle('active', i === carouselIndex);
-        }
-      });
-    }
+    if (!carousel) return;
+
+    const mobile = !isDesktop();
+    carousel.querySelectorAll('img').forEach((img, i) => {
+      if (mobile) {
+        img.style.display = i === carouselIndex ? 'block' : 'none';
+        img.style.opacity = '1';
+      } else {
+        // clear any inline styles left over from a mobile viewport
+        img.style.display = '';
+        img.style.opacity = '';
+        img.classList.toggle('active', i === carouselIndex);
+      }
+    });
+  }
+
+  // single source of truth for the carousel's visibility
+  function syncCarousel() {
+    if (!carousel || !biographyContainer) return;
+    const open = !biographyContainer.classList.contains('hidden');
+    carousel.classList.toggle('visible', open && carouselVisible);
   }
 
   function handleMouseMove(e) {
-    const x = e.clientX;
-    if (x < window.innerWidth / 2) {
-      biographyContainer.style.setProperty('cursor', 'w-resize', 'important');
-    } else {
-      biographyContainer.style.setProperty('cursor', 'e-resize', 'important');
-    }
+    const side = e.clientX < window.innerWidth / 2 ? 'w-resize' : 'e-resize';
+    biographyContainer.style.setProperty('cursor', side, 'important');
   }
 
   function handleMouseLeave() {
     biographyContainer.style.removeProperty('cursor');
   }
 
+  /* ---------------------------------------------------------------
+     Biography modal toggle
+  --------------------------------------------------------------- */
+  if (bioBtns.length > 0 && biographyContainer) {
+    bioBtns.forEach(bioBtn => {
+      bioBtn.addEventListener('click', () => {
+        biographyContainer.classList.toggle('hidden');
+        const open = !biographyContainer.classList.contains('hidden');
+
+        bioBtns.forEach(b => b.classList.toggle('active', open));
+        document.body.classList.toggle('bio-open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+
+        if (filters) filters.classList.toggle('hidden', open);
+        if (imgToggleBtn) imgToggleBtn.classList.toggle('visible', open);
+
+        syncCarousel();
+        updateCarousel();
+
+        if (open) {
+          if (imgToggleBtn) {
+            imgToggleBtn.textContent = carouselVisible ? 'images off' : 'images on';
+          }
+        } else {
+          document.body.classList.remove('bio-images-off');
+          biographyContainer.classList.remove('images-off');
+          biographyContainer.style.removeProperty('cursor');
+        }
+
+        if (isDesktop() && customCursor) {
+          if (open) {
+            customCursor.style.display = carouselVisible ? 'none' : 'block';
+            document.body.classList.remove('cursor-hidden');
+          } else {
+            customCursor.style.display = 'block';
+            document.body.classList.add('cursor-hidden');
+            document.documentElement.style.removeProperty('cursor');
+          }
+        }
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     Carousel paging (click left / right)
+  --------------------------------------------------------------- */
   if (biographyContainer) {
-    if (window.innerWidth > 768) {
+    if (isDesktop()) {
       biographyContainer.addEventListener('mousemove', handleMouseMove);
       biographyContainer.addEventListener('mouseleave', handleMouseLeave);
     }
 
     biographyContainer.addEventListener('click', (e) => {
       if (!carouselVisible) return;
-      const x = e.clientX;
-      if (x < window.innerWidth / 2) {
+      if (e.target.closest('.bio-topbar')) return;   // don't page when hitting the menu
+
+      if (e.clientX < window.innerWidth / 2) {
         carouselIndex = (carouselIndex - 1 + carouselImages.length) % carouselImages.length;
       } else {
         carouselIndex = (carouselIndex + 1) % carouselImages.length;
@@ -203,38 +233,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------------------------------------------------------------
+     Images on/off (desktop only)
+  --------------------------------------------------------------- */
   if (imgToggleBtn) {
     imgToggleBtn.addEventListener('click', () => {
       carouselVisible = !carouselVisible;
-      if (carousel) carousel.classList.toggle('visible');
-      imgToggleBtn.textContent = carouselVisible ? 'image off' : 'image on';
 
-      if (window.innerWidth > 768) {
-        if (!carouselVisible) {
-          biographyContainer.style.removeProperty('cursor');
-          biographyContainer.removeEventListener('mousemove', handleMouseMove);
-          biographyContainer.classList.add('images-off');
-          if (customCursor) {
-            customCursor.style.display = 'block';
-            document.body.classList.add('cursor-hidden');
-          }
-        } else {
-          biographyContainer.addEventListener('mousemove', handleMouseMove);
-          biographyContainer.classList.remove('images-off');
-          if (customCursor) {
-            customCursor.style.display = 'none';
-            document.body.classList.remove('cursor-hidden');
-          }
+      syncCarousel();
+      updateCarousel();
+      imgToggleBtn.textContent = carouselVisible ? 'images off' : 'images on';
+
+      if (!isDesktop()) return;
+
+      if (carouselVisible) {
+        biographyContainer.addEventListener('mousemove', handleMouseMove);
+        biographyContainer.classList.remove('images-off');
+        if (customCursor) {
+          customCursor.style.display = 'none';
+          document.body.classList.remove('bio-images-off');
+        }
+      } else {
+        biographyContainer.removeEventListener('mousemove', handleMouseMove);
+        biographyContainer.style.removeProperty('cursor');
+        biographyContainer.classList.add('images-off');
+        if (customCursor) {
+          customCursor.style.display = 'block';
+          document.body.classList.add('bio-images-off');
         }
       }
     });
   }
 
-  // drawings 토글
+  /* ---------------------------------------------------------------
+     Drawings on/off
+  --------------------------------------------------------------- */
   if (drawingsToggleBtn) {
     drawingsToggleBtn.addEventListener('click', () => {
       window.drawingsEnabled = !window.drawingsEnabled;
       drawingsToggleBtn.textContent = window.drawingsEnabled ? 'drawings off' : 'drawings on';
+
       if (window.drawingsEnabled) {
         showBackgroundImage(window.activeFilter);
       } else {
@@ -243,11 +281,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // clicked 클래스 토글 (topbar 버튼, a 태그 - img-toggle-btn, drawings-toggle-btn, bio 제외)
-  document.querySelectorAll('.topbar button:not(.img-toggle-btn):not(.drawings-toggle-btn):not(.bio), a').forEach(el => {
-    el.addEventListener('click', () => {
-      el.classList.toggle('clicked');
+  /* ---------------------------------------------------------------
+     clicked state on topbar buttons and links
+     (img-toggle-btn, drawings-toggle-btn and bio are excluded —
+      they carry their own state)
+  --------------------------------------------------------------- */
+  document
+    .querySelectorAll('.topbar button:not(.img-toggle-btn):not(.drawings-toggle-btn):not(.bio), a')
+    .forEach(el => {
+      el.addEventListener('click', () => el.classList.toggle('clicked'));
     });
-  });
 
+  /* ---------------------------------------------------------------
+     Keep the carousel correct across viewport changes
+  --------------------------------------------------------------- */
+  window.addEventListener('resize', updateCarousel);
+
+  updateCarousel();
 });

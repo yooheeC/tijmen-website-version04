@@ -49,7 +49,7 @@ const items = [
     category: "edited",
     col1: "Edited",
     col2: `\u2018Little man, what now?\u2019 <i>Simulacrum Magazine</i> 34, no. 3 (2026).`,
-    link: "",
+    link: "https://simulacrum.nl/36/",
     description: "",
     image: ""
   },
@@ -58,7 +58,7 @@ const items = [
     category: "edited",
     col1: "Edited",
     col2: `\u2018Motherboard.\u2019 <i>Simulacrum Magazine</i> 34, no. 2 (2026).`,
-    link: "",
+    link: "https://simulacrum.nl/35/",
     description: "",
     image: ""
   },
@@ -67,7 +67,7 @@ const items = [
     category: "edited",
     col1: "Edited",
     col2: `\u2018Drift(ing).\u2019 <i>Simulacrum Magazine</i> 34, no. 1 (2026).`,
-    link: "",
+    link: "https://simulacrum.nl/34/",
     description: "",
     image: ""
   },
@@ -191,7 +191,7 @@ const items = [
     category: "exhibitions",
     col1: "Exhibitions",
     col2: `The Don Quixote Sculpture Hall. Stedelijk Museum Amsterdam (16 November 2024). Curatorial Assistant.`,
-    link: "",
+    link: "https://www.stedelijk.nl/en/don-quixote-sculpture-hall",
     description: "",
     image: ""
   },
