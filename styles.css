@@ -226,10 +226,10 @@ body.bio-open .drawings-toggle-btn {
 
 .biography {
     position: relative;
-    width: 70vw;
-    margin: auto 0;          /* centres in the space left by the bio-topbar */
+    width: 70vw;         /* centres in the space left by the bio-topbar */
     pointer-events: none;
     z-index: 201;
+    margin: auto 0;  
 }
 
 .biography p,
