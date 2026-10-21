@@ -366,4 +366,7 @@ img + p {
     text-align: end;
 }
 
-/* 열린 뒤에는 개별 링크만 반응 (전역 a:hover가 처리) */
+
+.filters:has(.filter-btn.active:not([data-filter="all"])) ~ .credit {
+    display: none;
+}
