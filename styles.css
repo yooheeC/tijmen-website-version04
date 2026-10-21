@@ -344,3 +344,19 @@ img + p {
     margin-top: 0.25rem;
     margin-bottom: 10vh;
 }
+
+/* 링크·설명·이미지가 있는 항목만 반응 */
+.list-grid .col2.clickable {
+    cursor: pointer;
+}
+
+.list-grid .col2.clickable:hover {
+    color: blue;
+}
+
+/* 서랍이 열리면 제목은 더 이상 반응하지 않음 */
+.list-grid .col2.clickable.open:hover {
+    color: inherit;
+}
+
+/* 열린 뒤에는 개별 링크만 반응 (전역 a:hover가 처리) */

@@ -58,6 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
     filtered.forEach(item => {
       const isMobile = window.innerWidth <= 768;
 
+      /* --- what does this item actually carry? --- */
+      const hasDescription = item.description && item.description !== '';
+      const hasLink = item.link && item.link !== '';
+      const hasImage = item.image && (Array.isArray(item.image) ? item.image[0] !== '' : item.image !== '');
+      const hasBoth = hasDescription && hasLink;
+      const hasContent = hasDescription || hasLink || hasImage;
+
+      /* --- column 1: category label --- */
       const span1 = document.createElement('span');
       span1.className = 'col1';
       span1.textContent = item.col1;
@@ -70,10 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      /* --- column 2: title. Only clickable when there is something to open --- */
       const span2 = document.createElement('span');
-      span2.className = 'col2 clickable';
+      span2.className = hasContent ? 'col2 clickable' : 'col2';
       span2.innerHTML = item.col2;
 
+      /* --- drawer --- */
       const empty1 = document.createElement('span');
       empty1.className = 'col1';
       empty1.style.visibility = 'hidden';
@@ -89,19 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
       linkSpan.style.visibility = 'hidden';
       linkSpan.style.paddingTop = '0';
 
-      if (item.image) {
+      if (hasImage) {
         const images = Array.isArray(item.image) ? item.image : [item.image];
-        if (images.length > 0 && images[0] !== '') {
-          const carousel = createCarousel(images);
-          linkSpan.appendChild(carousel);
-        }
+        linkSpan.appendChild(createCarousel(images));
       }
-
-      const hasDescription = item.description && item.description !== '';
-      const hasLink = item.link && item.link !== '';
-      const hasImage = item.image && (Array.isArray(item.image) ? item.image[0] !== '' : item.image !== '');
-      const hasBoth = hasDescription && hasLink;
-      const hasContent = hasDescription || hasLink || hasImage;
 
       let content = '';
       if (hasDescription) {
@@ -121,38 +122,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       linkSpan.insertAdjacentHTML('beforeend', content);
 
-      const rowElements = [span1, span2, empty1, linkSpan];
+      /* --- open / close --- */
+      if (hasContent) {
+        span2.addEventListener('click', () => {
+          const open = span2.classList.toggle('open');
 
-      rowElements.forEach(el => {
-        el.addEventListener('mouseover', () => {
-          rowElements.forEach(e => {
-            e.style.color = 'blue';
-            e.querySelectorAll('a').forEach(a => a.style.color = 'blue');
-          });
-        });
-        el.addEventListener('mouseout', () => {
-          rowElements.forEach(e => {
-            e.style.color = '';
-            e.querySelectorAll('a').forEach(a => a.style.color = '');
-          });
-        });
-      });
-
-      span2.addEventListener('click', () => {
-        if (isMobile && !hasContent) return;
-
-        if (empty1.style.visibility === 'hidden') {
-          empty1.style.visibility = 'visible';
-          linkSpan.style.visibility = 'visible';
+          empty1.style.visibility = open ? 'visible' : 'hidden';
+          linkSpan.style.visibility = open ? 'visible' : 'hidden';
+          linkSpan.style.maxHeight = open ? '1000px' : '0';
           linkSpan.style.overflow = 'hidden';
-          linkSpan.style.maxHeight = '1000px';
-        } else {
-          empty1.style.visibility = 'hidden';
-          linkSpan.style.maxHeight = '0';
-          linkSpan.style.overflow = 'hidden';
-          linkSpan.style.visibility = 'hidden';
-        }
-      });
+        });
+      }
 
       grid.appendChild(span1);
       grid.appendChild(span2);
