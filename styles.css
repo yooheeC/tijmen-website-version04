@@ -380,3 +380,8 @@ img + p {
 .filters:has(.filter-btn.active:not([data-filter="all"])) ~ .credit {
     display: none;
 }
+
+.col-link {
+    display: block;
+    padding-bottom: 0.5rem;
+}

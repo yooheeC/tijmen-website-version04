@@ -2,6 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.list-grid');
   const filterBtns = document.querySelectorAll('.filter-btn');
 
+  // Only paint the background when drawings are switched on
+  function refreshBackground() {
+    if (window.drawingsEnabled) {
+      showBackgroundImage(window.activeFilter);
+    } else {
+      clearBackgroundImage();
+    }
+  }
+
   function createCarousel(images) {
     const wrapper = document.createElement('div');
     wrapper.className = 'item-carousel';
@@ -106,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let content = '';
       if (hasDescription) {
-        content += `<span style="display: block;">${item.description}</span>`;
+        content += `<div>${item.description}</div>`;
         if (hasBoth) content += `<div style="height: 1em;"></div>`;
       }
       if (hasLink) {
@@ -122,14 +131,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       linkSpan.insertAdjacentHTML('beforeend', content);
 
-      /* --- open / close --- */
+      /* --- open / close ---
+         max-height is 'none' when open: a fixed ceiling cut off the items
+         carrying long link lists. */
       if (hasContent) {
         span2.addEventListener('click', () => {
           const open = span2.classList.toggle('open');
 
           empty1.style.visibility = open ? 'visible' : 'hidden';
           linkSpan.style.visibility = open ? 'visible' : 'hidden';
-          linkSpan.style.maxHeight = open ? '1000px' : '0';
+          linkSpan.style.maxHeight = open ? 'none' : '0';
           linkSpan.style.overflow = 'hidden';
         });
       }
@@ -142,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (window.innerWidth > 768) {
       document.querySelectorAll('.col1, .col2').forEach(el => {
-        el.addEventListener('mouseover', () => showBackgroundImage(window.activeFilter));
-        el.addEventListener('mouseout', () => showBackgroundImage(window.activeFilter));
+        el.addEventListener('mouseover', refreshBackground);
+        el.addEventListener('mouseout', refreshBackground);
       });
     }
   }
@@ -155,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       window.activeFilter = btn.dataset.filter;
-      showBackgroundImage(window.activeFilter);
+      refreshBackground();
       renderItems(btn.dataset.filter);
     });
   });
