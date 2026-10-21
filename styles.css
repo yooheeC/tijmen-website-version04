@@ -282,7 +282,7 @@ main {
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    margin-bottom: 10vh;
+    margin-bottom: 100px;
 }
 
 .filters {
@@ -357,6 +357,13 @@ img + p {
 /* 서랍이 열리면 제목은 더 이상 반응하지 않음 */
 .list-grid .col2.clickable.open:hover {
     color: inherit;
+}
+
+.credit {
+    width: 70vw;
+    font-size: 0.8rem;
+    padding-top: 5vh;
+    text-align: end;
 }
 
 /* 열린 뒤에는 개별 링크만 반응 (전역 a:hover가 처리) */

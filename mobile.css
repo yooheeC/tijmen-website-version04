@@ -193,4 +193,10 @@
     .custom-cursor {
         display: none !important;
     }
+
+
+.credit {
+    font-size: 0.7rem;
+    text-align: start;
+}
 }
