@@ -5,24 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------------------------------------------------------------
      Elements
   --------------------------------------------------------------- */
-  const bioBtns           = document.querySelectorAll('.bio');
+  const bioBtns            = document.querySelectorAll('.bio');
   const biographyContainer = document.querySelector('.biography-container');
-  const filters           = document.querySelector('.filters');
-  const carousel          = document.querySelector('.biography-carousel');
-  const imgToggleBtn      = document.querySelector('.bio-topbar .img-toggle-btn');
-  const drawingsToggleBtn = document.querySelector('.topbar .drawings-toggle-btn');
+  const filters            = document.querySelector('.filters');
+  const carousel           = document.querySelector('.biography-carousel');
+  const imgToggleBtn       = document.querySelector('.bio-topbar .img-toggle-btn');
+  const drawingsToggleBtn  = document.querySelector('.topbar .drawings-toggle-btn');
 
   /* ---------------------------------------------------------------
      State
   --------------------------------------------------------------- */
   let customCursor    = null;
-  let carouselVisible = true;   // carousel images on/off (desktop only)
+  let carouselVisible = true;
   let carouselIndex   = 0;
 
   if (window.drawingsEnabled === undefined) window.drawingsEnabled = true;
 
   /* ---------------------------------------------------------------
-     Custom cursor (desktop only)
+     Custom cursor (desktop size only)
   --------------------------------------------------------------- */
   if (isDesktop()) {
     customCursor = document.createElement('div');
@@ -33,9 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousemove', (e) => {
       customCursor.style.left = `${e.clientX}px`;
       customCursor.style.top  = `${e.clientY}px`;
+
+      if (!isDesktop()) {
+        customCursor.style.display = 'none';
+        document.body.classList.remove('cursor-hidden');
+      }
     });
 
     document.addEventListener('mouseover', (e) => {
+      if (!isDesktop()) return;
       if (e.target.closest('.item-carousel')) {
         customCursor.style.display = 'none';
       } else if (!biographyContainer || biographyContainer.classList.contains('hidden')) {
@@ -44,10 +50,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  window.addEventListener('resize', () => {
+    if (!customCursor) return;
+    if (!isDesktop()) {
+      customCursor.style.display = 'none';
+      document.body.classList.remove('cursor-hidden');
+      if (biographyContainer) biographyContainer.style.removeProperty('cursor');
+    } else {
+      if (biographyContainer && !biographyContainer.classList.contains('hidden')) return;
+      customCursor.style.display = 'block';
+      document.body.classList.add('cursor-hidden');
+    }
+  });
+
   /* ---------------------------------------------------------------
      Mobile popup show/hide
   --------------------------------------------------------------- */
-  const popupBtn = document.querySelector('.popup-btn');
+  const popupBtn  = document.querySelector('.popup-btn');
   const imgcolumn = document.querySelector('.imgcolumn');
 
   if (popupBtn && imgcolumn) {
@@ -75,10 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let startY = 0;
 
     popup.addEventListener('mousedown', (e) => {
-      const rect = popup.getBoundingClientRect();
+      const rect   = popup.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
 
-      // drag from the outer quarters only, so the centre stays clickable
       if (clickX < rect.width * 0.25 || clickX > rect.width * 0.75) {
         isDragging = true;
         hasMoved   = false;
@@ -91,8 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
       hasMoved = true;
-      popup.style.left = `${e.clientX - startX}px`;
-      popup.style.top  = `${e.clientY - startY}px`;
+      popup.style.left      = `${e.clientX - startX}px`;
+      popup.style.top       = `${e.clientY - startY}px`;
       popup.style.transform = 'none';
     });
 
@@ -111,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------------------------------------------------------------
-     Biography carousel
+     Biography carousel helpers
   --------------------------------------------------------------- */
   const carouselImages = [
     'img/IMG_2591.jpg',
@@ -144,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
         img.style.display = i === carouselIndex ? 'block' : 'none';
         img.style.opacity = '1';
       } else {
-        // clear any inline styles left over from a mobile viewport
         img.style.display = '';
         img.style.opacity = '';
         img.classList.toggle('active', i === carouselIndex);
@@ -152,14 +169,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // single source of truth for the carousel's visibility
   function syncCarousel() {
     if (!carousel || !biographyContainer) return;
     const open = !biographyContainer.classList.contains('hidden');
     carousel.classList.toggle('visible', open && carouselVisible);
   }
 
+  // Page relative to the clicked element, not the window: on mobile the
+  // carousel is a small block, so the window midpoint is the wrong axis.
+  function pageCarousel(e, target) {
+    if (!carouselVisible) return;
+    if (e.target.closest('.bio-topbar')) return;
+    if (e.target.closest('a')) return;
+
+    const rect = target.getBoundingClientRect();
+    const mid  = rect.left + rect.width / 2;
+
+    carouselIndex = e.clientX < mid
+      ? (carouselIndex - 1 + carouselImages.length) % carouselImages.length
+      : (carouselIndex + 1) % carouselImages.length;
+
+    updateCarousel();
+  }
+
   function handleMouseMove(e) {
+    if (!isDesktop()) {
+      biographyContainer.style.removeProperty('cursor');
+      return;
+    }
     const side = e.clientX < window.innerWidth / 2 ? 'w-resize' : 'e-resize';
     biographyContainer.style.setProperty('cursor', side, 'important');
   }
@@ -181,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('bio-open', open);
         document.body.style.overflow = open ? 'hidden' : '';
 
-        if (filters) filters.classList.toggle('hidden', open);
+        if (filters)      filters.classList.toggle('hidden', open);
         if (imgToggleBtn) imgToggleBtn.classList.toggle('visible', open);
 
         syncCarousel();
@@ -212,29 +249,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------------------------------------------------------------
-     Carousel paging (click left / right)
+     Carousel paging
+     Desktop: the carousel fills the screen, so the whole modal pages.
+     Mobile:  the carousel is an inline block, so only it pages.
+     Both listeners are registered and gated at event time, so a
+     viewport change switches behaviour without a reload.
   --------------------------------------------------------------- */
   if (biographyContainer) {
-    if (isDesktop()) {
-      biographyContainer.addEventListener('mousemove', handleMouseMove);
-      biographyContainer.addEventListener('mouseleave', handleMouseLeave);
-    }
+    biographyContainer.addEventListener('mousemove', handleMouseMove);
+    biographyContainer.addEventListener('mouseleave', handleMouseLeave);
 
     biographyContainer.addEventListener('click', (e) => {
-      if (!carouselVisible) return;
-      if (e.target.closest('.bio-topbar')) return;   // don't page when hitting the menu
+      if (!isDesktop()) return;
+      pageCarousel(e, biographyContainer);
+    });
+  }
 
-      if (e.clientX < window.innerWidth / 2) {
-        carouselIndex = (carouselIndex - 1 + carouselImages.length) % carouselImages.length;
-      } else {
-        carouselIndex = (carouselIndex + 1) % carouselImages.length;
-      }
-      updateCarousel();
+  if (carousel) {
+    carousel.addEventListener('click', (e) => {
+      if (isDesktop()) return;   // the container handler covers desktop
+      pageCarousel(e, carousel);
     });
   }
 
   /* ---------------------------------------------------------------
-     Images on/off (desktop only)
+     Images on/off
   --------------------------------------------------------------- */
   if (imgToggleBtn) {
     imgToggleBtn.addEventListener('click', () => {
@@ -247,14 +286,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isDesktop()) return;
 
       if (carouselVisible) {
-        biographyContainer.addEventListener('mousemove', handleMouseMove);
         biographyContainer.classList.remove('images-off');
         if (customCursor) {
           customCursor.style.display = 'none';
           document.body.classList.remove('bio-images-off');
         }
       } else {
-        biographyContainer.removeEventListener('mousemove', handleMouseMove);
         biographyContainer.style.removeProperty('cursor');
         biographyContainer.classList.add('images-off');
         if (customCursor) {
@@ -283,8 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------------------------------------------------------------
      clicked state on topbar buttons and links
-     (img-toggle-btn, drawings-toggle-btn and bio are excluded —
-      they carry their own state)
   --------------------------------------------------------------- */
   document
     .querySelectorAll('.topbar button:not(.img-toggle-btn):not(.drawings-toggle-btn):not(.bio), a')

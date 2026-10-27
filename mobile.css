@@ -1,4 +1,9 @@
 @media (max-width: 768px) {
+
+    /* ======================================================================
+       Base
+       ====================================================================== */
+
     html {
         font-size: 14pt;
         font-family: "ltc-caslon-pro", 'Times New Roman', serif;
@@ -11,15 +16,21 @@
         flex-direction: column;
     }
 
-    main {
-        width: 100vw;
-        padding-top: 30px;
-        padding-left: var(--mobile-padding);
-        padding-right: var(--mobile-padding);
-        margin-bottom: var(--mobile-spacing);
-        justify-content: flex-start !important;
-        align-items: flex-start !important;
+    button {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: inherit;
+        color: inherit;
+        font-family: inherit;
+        -webkit-appearance: none;
+        appearance: none;
+        position: static;
     }
+
+    /* ======================================================================
+       Topbars — stacked instead of side by side
+       ====================================================================== */
 
     .topbar {
         width: 100vw;
@@ -42,39 +53,44 @@
         z-index: 100;
     }
 
-    .topbar .name-btn {
-        position: relative;
-        width: 100%;
-        left: 0;
-        text-align: left;
-        margin-bottom: 0px;
-    }
-
-    .topbar .menu {
-        left: 0;
-        width: 100%;
-        position: relative;
-    }
-
-
-
+    .topbar .name-btn,
     .bio-topbar .name-btn {
         position: relative;
         width: 100%;
         left: 0;
         text-align: left;
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 
+    .topbar .menu,
     .bio-topbar .menu {
+        position: relative;
         left: 0;
         width: 100%;
-        position: relative;
+    }
+
+    /* No carousel on mobile, so no images toggle */
+    .img-toggle-btn {
+        display: none !important;
+    }
+
+    /* ======================================================================
+       Main — filters and list
+       ====================================================================== */
+
+    main {
+        width: 100vw;
+        padding-top: 30px;
+        padding-left: var(--mobile-padding);
+        padding-right: var(--mobile-padding);
+        margin-bottom: var(--mobile-spacing);
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
     }
 
     .filters {
         width: 95vw !important;
-        padding-top: 0px;
+        padding-top: 0;
         padding-bottom: 50px;
         display: flex !important;
         flex-wrap: wrap !important;
@@ -97,6 +113,7 @@
         row-gap: 1rem !important;
     }
 
+    /* The placeholder cell in front of a drawer has no job in one column */
     .col1[style*="visibility: hidden"] {
         display: none !important;
     }
@@ -105,18 +122,15 @@
         word-break: break-all;
     }
 
-    button {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        font-size: inherit;
-        color: inherit;
-        font-family: inherit;
-        -webkit-appearance: none;
-        appearance: none;
-        position: static;
+    .credit {
+        padding: var(--mobile-padding);
+        font-size: 0.7rem;
+        text-align: start;
     }
+
+    /* ======================================================================
+       Biography modal — scrolls as one column, carousel sits inline
+       ====================================================================== */
 
     .biography-container:not(.hidden) {
         position: fixed;
@@ -130,11 +144,6 @@
         background-color: white !important;
         z-index: 1400 !important;
         padding: 0;
-        cursor: default !important;
-    }
-
-    .biography-container:not(.hidden) * {
-        cursor: default !important;
     }
 
     .biography-container .bio-topbar {
@@ -145,59 +154,107 @@
         z-index: 1410;
     }
 
-    .biography-container .biography-carousel {
-    display: block !important;
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    width: 100% !important;
-    height: 56vw !important;
-    overflow: hidden !important;
-    margin-top: var(--mobile-spacing);
-}
-
-.biography-container .biography-carousel img {
-    position: relative !important;
-    width: 100% !important;
-    height: 56vw !important;
-    object-fit: contain;
-    object-position: center;
-    display: none;
-    opacity: 1;
-}
-
-
-    .biography-container .biography-carousel img.active {
-        display: block;
-    }
-
-    .biography-carousel img+p {
-        display: none;
-    }
-
     .biography-container .biography {
         display: block;
         width: 100%;
         padding: var(--mobile-padding);
         margin-top: var(--mobile-spacing);
-        margin-bottom: var(--mobile-spacing);
+        margin-bottom: 10vh;
         pointer-events: auto;
     }
 
-    .img-toggle-btn {
+    .biography-container .biography-carousel {
+        display: block !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        height: 56vw !important;
+        overflow: hidden !important;
+        margin-top: var(--mobile-spacing);
+    }
+
+    .biography-container .biography-carousel img {
+        position: relative !important;
+        width: 100% !important;
+        height: 56vw !important;
+        object-fit: contain;
+        object-position: center;
+        display: none;
+        opacity: 1;
+    }
+
+    .biography-container .biography-carousel img.active {
+        display: block;
+    }
+
+    .biography-carousel img + p {
+        display: none;
+    }
+
+    /* ======================================================================
+       Cursors
+       ----------------------------------------------------------------------
+       No custom cursor and no directional (w-/e-resize) cursors here.
+       styles.css sets those with !important, so each of its selectors is
+       repeated verbatim below: same specificity, declared later, so these
+       win. "auto" — not "default" — lets the browser pick per element,
+       so text still gets an I-beam and links a pointer.
+       ====================================================================== */
+
+    .custom-cursor {
         display: none !important;
     }
 
+    body,
+    body *,
+    body.cursor-hidden *,
+    body.cursor-hidden .biography-container:not(.hidden),
+    body.cursor-hidden .item-carousel div,
+    body.cursor-hidden .item-carousel div:last-child,
+    body.bio-images-off *,
+    .biography-container:not(.hidden),
+    .biography-container:not(.hidden) *,
+    .biography-container.images-off,
+    .biography-container.images-off * {
+        cursor: auto !important;
+    }
 
-.credit {
-    padding: var(--mobile-padding);
-    font-size: 0.7rem;
-    text-align: start;
-}
+    /* Anything that is actually tappable gets a pointer back.
+       These sit last and carry more weight than the reset above. */
+    .biography-container:not(.hidden) a,
+    .biography-container:not(.hidden) button,
+    .biography-container:not(.hidden) .biography-carousel,
+    body a,
+    body button,
+    body .col2.clickable,
+    body .item-carousel div {
+        cursor: pointer !important;
+    }
+        /* 캐러셀 좌우 절반에 방향 커서 */
+    .biography-container .biography-carousel {
+        position: relative !important;
+    }
 
+    .biography-container .biography-carousel::before,
+    .biography-container .biography-carousel::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        z-index: 2;
+    }
 
-    .biography-carousel {
-        cursor:  pointer;
+    .biography-container .biography-carousel::before {
+        left: 0;
+        cursor: w-resize;
+    }
+
+    .biography-container .biography-carousel::after {
+        right: 0;
+        cursor: e-resize;
     }
 }
+
