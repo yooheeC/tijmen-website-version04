@@ -4,6 +4,9 @@
 :root {
     --mobile-spacing: 2vh;
     --main-color: blue;
+    --padding: 5vh;
+    --small-padding: 1vw;
+    --mobile-padding: 5vw;
 }
 
 * {
@@ -139,8 +142,8 @@ body.bio-images-off .topbar {
 .bio-topbar {
     width: 100vw;
     position: relative;
-    padding-top: 1vw;
-    padding-left: 1vw;
+    padding-top: var(--small-padding);
+    padding-left: var(--small-padding);
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -294,13 +297,12 @@ main {
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    margin-bottom: 100px;
 }
 
 .filters {
     width: 70vw;
-    padding-top: 5vh;
-    padding-bottom: 5vh;
+    padding-top: var(--padding);
+    padding-bottom: var(--padding);
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 0;
@@ -373,15 +375,15 @@ img + p {
    ========================================================================== */
 
 .credit {
-    width: 70vw;
+    width: 100vw;
+    margin: 0 auto;
     font-size: 0.8rem;
-    padding-top: 5vh;
+    padding: var(--small-padding);
     text-align: start;
 }
 
-/* Hidden whenever a filter other than "All" is active.
-   Sits at the end of the page, so removing it shifts nothing above. */
-.filters:has(.filter-btn.active:not([data-filter="all"])) ~ .credit {
+/* Hidden whenever a filter other than "All" is active */
+body:has(.filter-btn.active:not([data-filter="all"])) .credit {
     display: none;
 }
 
@@ -393,3 +395,4 @@ img + p {
 .col2.clickable {
     color: inherit;
 }
+
