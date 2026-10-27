@@ -154,7 +154,7 @@
     width: 100% !important;
     height: 56vw !important;
     overflow: hidden !important;
-    margin-top: 5vh;
+    margin-top: var(--mobile-spacing);
 }
 
 .biography-container .biography-carousel img {
@@ -181,7 +181,7 @@
         width: 100%;
         padding: 5vw;
         padding-bottom: 5vh;
-        margin-top: 5vh;
+        margin-top: var(--mobile-spacing);
         margin-bottom: 100px;
         pointer-events: auto;
     }
@@ -190,13 +190,14 @@
         display: none !important;
     }
 
-    .custom-cursor {
-        display: none !important;
-    }
-
 
 .credit {
     font-size: 0.7rem;
     text-align: start;
 }
+
+
+    .biography-carousel {
+        cursor:  pointer;
+    }
 }

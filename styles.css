@@ -1,6 +1,10 @@
 /* ==========================================================================
    Reset
    ========================================================================== */
+:root {
+    --mobile-spacing: 2vh;
+    --main-color: blue;
+}
 
 * {
     margin: 0;
@@ -30,7 +34,7 @@ body {
 }
 
 ::selection {
-    background-color: blue;
+    background-color: var(--main-color);
     color: white;
 }
 
@@ -47,7 +51,7 @@ a:hover,
 .topbar button:hover,
 .bio-topbar button:hover,
 .filter-btn:hover {
-    color: blue;
+    color: var(--main-color);
 }
 
 button {
@@ -184,7 +188,7 @@ body.bio-open .topbar {
 .drawings-toggle-btn {
     display: block;
     visibility: hidden;
-    color: blue;
+    color: var(--main-color);
 }
 
 body:has(.filter-btn.active:not([data-filter="all"])):not(.bio-open) .drawings-toggle-btn {
@@ -195,7 +199,7 @@ body:has(.filter-btn.active:not([data-filter="all"])):not(.bio-open) .drawings-t
 .img-toggle-btn {
     display: block;
     visibility: hidden;
-    color: blue;
+    color: var(--main-color);
 }
 
 .img-toggle-btn.visible {
@@ -335,7 +339,7 @@ main .list-grid {
 }
 
 .list-grid .col2.clickable:hover {
-    color: blue;
+    color: var(--main-color);
 }
 
 /* Once the drawer is open the title stops reacting —
@@ -384,4 +388,8 @@ img + p {
 .col-link {
     display: block;
     padding-bottom: 0.5rem;
+}
+
+.col2.clickable {
+    color: inherit;
 }
