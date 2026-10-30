@@ -79,6 +79,7 @@
        ====================================================================== */
 
     main {
+        background-color: yellow;
         width: 100vw;
         padding-top: 30px;
         padding-left: var(--mobile-padding);
