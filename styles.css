@@ -8,6 +8,7 @@
     --small-padding: 1vw;
     --mobile-padding: 5vw;
     --button-padding: 1px;
+    --bottom-margin: 100px;
 }
 
 * {
@@ -35,6 +36,8 @@ body {
     overflow-x: hidden;
     display: flex;
     flex-wrap: wrap;
+    background-color: white;
+
 }
 
 ::selection {
@@ -402,3 +405,7 @@ body:has(.filter-btn.active:not([data-filter="all"])) .credit {
     color: inherit;
 }
 
+body.bio-open main,
+body.bio-open .credit {
+    visibility: hidden;
+}

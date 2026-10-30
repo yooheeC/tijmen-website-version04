@@ -83,7 +83,7 @@
         padding-top: 30px;
         padding-left: var(--mobile-padding);
         padding-right: var(--mobile-padding);
-        margin-bottom: var(--mobile-spacing);
+        margin-bottom: var( --bottom-margin);
         justify-content: flex-start !important;
         align-items: flex-start !important;
     }
@@ -138,6 +138,8 @@
         left: 0;
         width: 100vw;
         height: 100vh;
+        height: 100dvh;
+        min-height: 100svh;
         display: block !important;
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
@@ -159,7 +161,7 @@
         width: 100%;
         padding: var(--mobile-padding);
         margin-top: var(--mobile-spacing);
-        margin-bottom: 10vh;
+        margin-bottom: var(--bottom-margin);
         pointer-events: auto;
     }
 
