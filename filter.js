@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
     images.forEach((src, i) => {
       const img = document.createElement('img');
       img.src = src;
+      // [추가] 첫 장만 바로 받고, 나머지는 넘길 때 받습니다
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      img.decoding = 'async';
       img.style.width = '100%';
       img.style.display = i === 0 ? 'block' : 'none';
       wrapper.appendChild(img);
@@ -136,9 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
       linkSpan.style.visibility = 'hidden';
       linkSpan.style.paddingTop = '0';
 
-      if (hasImage) {
-        linkSpan.appendChild(createCarousel(images));
-      }
+      // [변경] 이미지 캐러셀은 여기서 만들지 않습니다.
+      // 사용자가 그 항목을 처음 펼칠 때 만들어서, 보지도 않은 이미지를
+      // 미리 다운로드하지 않게 합니다. (아래 클릭 핸들러 참고)
+      let carouselBuilt = false;
 
       let content = '';
       if (hasDescription) {
@@ -188,6 +192,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMobile && !hasContent) return;
 
         if (empty1.style.visibility === 'hidden') {
+          // [추가] 처음 펼칠 때 이미지 캐러셀을 만듭니다.
+          // 설명·링크보다 위에 와야 하므로 맨 앞에 끼워 넣습니다.
+          if (hasImage && !carouselBuilt) {
+            linkSpan.insertBefore(createCarousel(images), linkSpan.firstChild);
+            carouselBuilt = true;
+          }
+
           empty1.style.visibility = 'visible';
           linkSpan.style.visibility = 'visible';
           linkSpan.style.overflow = 'hidden';
