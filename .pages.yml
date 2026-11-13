@@ -1,0 +1,62 @@
+# ============================================================
+#  Pages CMS 설정
+#  위치: 레포 루트 (index.html 과 같은 위치)
+# ============================================================
+
+media:
+  input: works
+  output: works
+  extensions: [jpg, jpeg, png, webp]
+
+content:
+  - name: works
+    label: 작업 목록
+    type: file
+    path: data.json
+    format: json
+    list: true
+    fields:
+      - name: date
+        label: 연도
+        type: string
+        required: true
+        description: 숫자 4자리만 입력하세요. 예 2026
+
+      - name: category
+        label: 분류
+        type: select
+        required: true
+        options:
+          values:
+            - name: exhibitions
+              label: Exhibitions
+            - name: edited
+              label: Edited
+            - name: criticism
+              label: Criticism
+            - name: writings
+              label: Writings
+            - name: commissioned
+              label: Commissioned
+
+      - name: col2
+        label: 항목 내용
+        type: text
+        required: true
+        description: 기울임체로 만들 부분은 <i>Simulacrum Magazine</i> 처럼 감싸주세요.
+
+      - name: description
+        label: 설명
+        type: text
+
+      - name: link
+        label: 링크
+        type: string
+        list: true
+        description: https:// 로 시작하는 전체 주소. 여러 개 추가할 수 있습니다.
+
+      - name: image
+        label: 이미지
+        type: image
+        list: true
+        description: 가로 1600px 이하 JPG 권장. 여러 장 넣으면 좌우 클릭으로 넘기는 캐러셀이 됩니다.
