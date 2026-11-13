@@ -188,6 +188,7 @@
   {
     "date": "2099",
     "category": "exhibitions",
-    "col2": "Test. <i>Hello</i>"
+    "col2": "Test. <i>Hello</i>",
+    "description": "Hello This is the test one"
   }
 ]
