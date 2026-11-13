@@ -336,6 +336,7 @@ main .list-grid {
     display: grid;
     grid-template-columns: 10vw 1fr;
     row-gap: 0.5rem;
+    margin-bottom: var(--bottom-margin);
 }
 
 .col1,
@@ -409,3 +410,4 @@ body.bio-open main,
 body.bio-open .credit {
     visibility: hidden;
 }
+
