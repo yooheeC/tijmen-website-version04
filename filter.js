@@ -2,6 +2,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.list-grid');
   const filterBtns = document.querySelectorAll('.filter-btn');
 
+  // ── [추가] category 로 col1 라벨을 자동으로 만듭니다 ──────────────
+  // 예전에는 data.js 에 col1: "Edited" 가 따로 들어있었지만,
+  // category 와 항상 똑같은 값이라 클라이언트가 두 번 입력할 필요가
+  // 없도록 여기서 만들어 씁니다.
+  const CATEGORY_LABELS = {
+    exhibitions: 'Exhibitions',
+    edited: 'Edited',
+    criticism: 'Criticism',
+    writings: 'Writings',
+    commissioned: 'Commissioned'
+  };
+
+  function labelFor(category) {
+    const key = String(category || '').toLowerCase();
+    if (CATEGORY_LABELS[key]) return CATEGORY_LABELS[key];
+    // 새 분류가 생겨도 첫 글자만 대문자로 바꿔서 표시
+    return key ? key.charAt(0).toUpperCase() + key.slice(1) : '';
+  }
+
+  // ── [추가] 값을 항상 "빈 것이 걸러진 배열"로 바꿔줍니다 ───────────
+  // link, image 가 글자 하나일 때도, 목록일 때도, 비어 있을 때도
+  // 모두 똑같이 처리되게 만드는 안전장치입니다.
+  function toArray(value) {
+    if (Array.isArray(value)) {
+      return value.filter(v => v && String(v).trim() !== '');
+    }
+    if (value === undefined || value === null || String(value).trim() === '') {
+      return [];
+    }
+    return [value];
+  }
+
+  // ── [변경] 목록 데이터. data.json 을 읽어온 뒤 채워집니다 ─────────
+  let items = [];
+
   function createCarousel(images) {
     const wrapper = document.createElement('div');
     wrapper.className = 'item-carousel';
@@ -49,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.innerHTML = '';
 
     const filtered = items.filter(item => {
-      const category = item.category.toLowerCase();
+      const category = String(item.category || '').toLowerCase();
       return filter === 'all' || category === filter;
     });
 
@@ -60,7 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const span1 = document.createElement('span');
       span1.className = 'col1';
-      span1.textContent = item.col1;
+      // [변경] item.col1 → category 에서 자동 생성
+      span1.textContent = labelFor(item.category);
 
       if (isMobile) {
         if (filter !== 'all') {
@@ -70,14 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      const hasDescription = item.description && item.description !== '';
-      const hasLink = item.link && item.link !== '';
-      const hasImage = item.image && (Array.isArray(item.image) ? item.image[0] !== '' : item.image !== '');
+      // ── [변경] 빈 배열을 "값이 있다"고 잘못 판단하던 부분 수정 ─────
+      const links = toArray(item.link);
+      const images = toArray(item.image);
+
+      const hasDescription = !!(item.description && String(item.description).trim() !== '');
+      const hasLink = links.length > 0;
+      const hasImage = images.length > 0;
       const hasBoth = hasDescription && hasLink;
       const hasContent = hasDescription || hasLink || hasImage;
 
       const span2 = document.createElement('span');
       span2.className = hasContent ? 'col2 clickable' : 'col2';
+      // col2 에는 <i> 같은 태그가 들어있으므로 innerHTML 을 그대로 씁니다
       span2.innerHTML = item.col2;
 
       const empty1 = document.createElement('span');
@@ -95,12 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
       linkSpan.style.visibility = 'hidden';
       linkSpan.style.paddingTop = '0';
 
-      if (item.image) {
-        const images = Array.isArray(item.image) ? item.image : [item.image];
-        if (images.length > 0 && images[0] !== '') {
-          const carousel = createCarousel(images);
-          linkSpan.appendChild(carousel);
-        }
+      if (hasImage) {
+        linkSpan.appendChild(createCarousel(images));
       }
 
       let content = '';
@@ -109,12 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasBoth) content += `<div style="height: 1em;"></div>`;
       }
       if (hasLink) {
-        if (Array.isArray(item.link)) {
-          item.link.forEach((l, index) => {
-            content += `<a href="${l}" target="_blank">${index + 1}. ${l}</a><div style="height: 0.3em;"></div>`;
-          });
+        // [유지] 링크가 하나면 번호 없이, 여러 개면 1. 2. 3. 번호를 붙입니다
+        if (links.length === 1) {
+          content += `<a href="${links[0]}" target="_blank">${links[0]}</a>`;
         } else {
-          content += `<a href="${item.link}" target="_blank">${item.link}</a>`;
+          links.forEach((l, i) => {
+            content += `<a href="${l}" target="_blank">${i + 1}. ${l}</a><div style="height: 0.3em;"></div>`;
+          });
         }
       }
       if (hasContent) content += `<div style="height: 1em;"></div>`;
@@ -132,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
           }
           if (window.innerWidth > 768) {
-            showBackgroundImage(item.category.toLowerCase());
+            showBackgroundImage(String(item.category || '').toLowerCase());
           }
         });
         el.addEventListener('mouseout', () => {
@@ -169,7 +207,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  renderItems('all');
+  // ── [추가] data.json 을 읽어온 뒤에 목록을 그립니다 ───────────────
+  // 예전에는 data.js 가 items 변수를 미리 만들어줬지만, 이제는
+  // 파일을 불러오는 데 시간이 걸리므로 다 읽은 다음에 그려야 합니다.
+  fetch('data.json')
+    .then(res => {
+      if (!res.ok) throw new Error('data.json 을 불러올 수 없습니다 (' + res.status + ')');
+      return res.json();
+    })
+    .then(data => {
+      items = Array.isArray(data) ? data : [];
+      renderItems('all');
+    })
+    .catch(err => {
+      console.error(err);
+      // 데이터를 못 읽어도 페이지 전체가 깨지지는 않게 비워둡니다
+      grid.innerHTML = '';
+    });
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
