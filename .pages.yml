@@ -4,60 +4,63 @@
 # ============================================================
 
 media:
-  input: works
-  output: works
-  extensions: [jpg, jpeg, png, webp]
+    input: works
+    output: works
+    extensions: [jpg, jpeg, png, webp]
 
 content:
-  - name: works
-    label: Works
-    type: file
-    path: data.json
-    format: json
-    list: true
-    fields:
-      - name: date
-        label: Year
-        type: string
-        required: true
-        description: Four digits only, e.g. 2026. The list is sorted by year, newest first.
+    - name: works
+      label: Works
+      type: file
+      path: data.json
+      format: json
+      list:
+          collapsible:
+              collapsed: true
+              summary: "{date} · {col2}"
+      fields:
+          - name: date
+            label: Year
+            type: string
+            required: true
+            description: Four digits only, e.g. 2026. The list is sorted by year, newest first.
 
-      - name: category
-        label: Category
-        type: select
-        required: true
-        description: Decides which filter this entry appears under.
-        options:
-          values:
-            - name: exhibitions
-              label: Exhibitions
-            - name: edited
-              label: Edited
-            - name: criticism
-              label: Criticism
-            - name: writings
-              label: Writings
-            - name: commissioned
-              label: Commissioned
+          - name: category
+            label: Category
+            type: select
+            required: true
+            description: Decides which filter this entry appears under.
+            options:
+                values:
+                    - name: exhibitions
+                      label: Exhibitions
+                    - name: edited
+                      label: Edited
+                    - name: criticism
+                      label: Criticism
+                    - name: writings
+                      label: Writings
+                    - name: commissioned
+                      label: Commissioned
 
-      - name: col2
-        label: Entry
-        type: text
-        required: true
-        description: "The citation line. For italics, wrap the text in <i> and </i> — for example: <i>Simulacrum Magazine</i>"
+          - name: col2
+            label: Entry
+            type: text
+            required: true
+            description: "The citation line. For italics, wrap the text in <i> and </i> — for example: <i>Simulacrum Magazine</i>"
 
-      - name: description
-        label: Description
-        type: text
+          - name: description
+            label: Description
+            type: text
 
-      - name: link
-        label: Links
-        type: string
-        list: true
-        description: Full address starting with https:// — add as many as you need.
+          - name: link
+            label: Links
+            type: string
+            list: true
+            description: Full address starting with https:// — add as many as you need.
 
-      - name: image
-        label: Images
-        type: image
-        list: true
-        description: JPG, 1600px wide or less. Add several images to create a carousel you can click through.
+          - name: image
+            label: Images
+            type: image
+            list: true
+            description: JPG, 1600px wide or less. Add several images to create a carousel you can click through.
