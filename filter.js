@@ -144,9 +144,25 @@ document.addEventListener('DOMContentLoaded', () => {
       // 미리 다운로드하지 않게 합니다. (아래 클릭 핸들러 참고)
       let carouselBuilt = false;
 
+      // [추가] 함께 파래지는 묶음: 분류 + 제목 + 설명.
+      // 링크는 일부러 뺍니다. 링크는 각자 hover 되어야 하니까요.
+      // (linkSpan 자체를 칠하면 그 안의 링크까지 같이 물들어서 안 됩니다)
+      function highlightGroup() {
+        const group = [span1, span2, empty1];
+        const desc = linkSpan.querySelector('.col-desc');
+        if (desc) group.push(desc);
+        return group;
+      }
+
+      function setHighlight(on) {
+        highlightGroup().forEach(e => {
+          e.style.color = on ? 'blue' : '';
+        });
+      }
+
       let content = '';
       if (hasDescription) {
-        content += `<span style="display: block;">${item.description}</span>`;
+        content += `<span class="col-desc" style="display: block;">${item.description}</span>`;
         if (hasBoth) content += `<div style="height: 1em;"></div>`;
       }
       if (hasLink) {
@@ -166,22 +182,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const rowElements = [span1, span2, empty1, linkSpan];
 
       rowElements.forEach(el => {
-        el.addEventListener('mouseover', () => {
+        el.addEventListener('mouseover', (ev) => {
+          // [변경] 마우스가 링크 위에 있으면 묶음은 칠하지 않습니다.
+          // 그래야 링크 하나만 따로 반응합니다 (링크 색은 CSS가 처리).
+          const overLink = !!(ev.target.closest && ev.target.closest('a'));
           if (hasContent) {
-            rowElements.forEach(e => {
-              e.style.color = 'blue';
-              e.querySelectorAll('a').forEach(a => a.style.color = 'blue');
-            });
+            setHighlight(!overLink);
           }
           if (window.innerWidth > 768) {
             showBackgroundImage(String(item.category || '').toLowerCase());
           }
         });
         el.addEventListener('mouseout', () => {
-          rowElements.forEach(e => {
-            e.style.color = '';
-            e.querySelectorAll('a').forEach(a => a.style.color = '');
-          });
+          setHighlight(false);
           if (window.innerWidth > 768) {
             showBackgroundImage(window.activeFilter);
           }

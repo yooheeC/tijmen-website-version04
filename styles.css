@@ -411,3 +411,10 @@ body.bio-open .credit {
     visibility: hidden;
 }
 
+.col-link a {
+  color: inherit;
+}
+.col-link a:hover {
+  color: blue;
+}
+
