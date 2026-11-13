@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return wrapper;
   }
 
-  function renderItems(filter) {
+  function renderItems(items, filter) {
     grid.innerHTML = '';
 
     const filtered = items.filter(item => {
@@ -57,6 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filtered.forEach(item => {
       const isMobile = window.innerWidth <= 768;
+
+      // link와 image 항상 배열로 처리
+      const links = Array.isArray(item.link) ? item.link.filter(l => l) : (item.link ? [item.link] : []);
+      const images = Array.isArray(item.image) ? item.image.filter(s => s) : (item.image ? [item.image] : []);
+
+      const hasDescription = item.description && item.description !== '';
+      const hasLink = links.length > 0;
+      const hasImage = images.length > 0;
+      const hasBoth = hasDescription && hasLink;
+      const hasContent = hasDescription || hasLink || hasImage;
 
       const span1 = document.createElement('span');
       span1.className = 'col1';
@@ -70,12 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      const hasDescription = item.description && item.description !== '';
-      const hasLink = item.link && item.link !== '';
-      const hasImage = item.image && (Array.isArray(item.image) ? item.image[0] !== '' : item.image !== '');
-      const hasBoth = hasDescription && hasLink;
-      const hasContent = hasDescription || hasLink || hasImage;
-
       const span2 = document.createElement('span');
       span2.className = hasContent ? 'col2 clickable' : 'col2';
       span2.innerHTML = item.col2;
@@ -83,10 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const empty1 = document.createElement('span');
       empty1.className = 'col1';
       empty1.style.visibility = 'hidden';
-
-      if (isMobile) {
-        empty1.style.display = 'none';
-      }
+      if (isMobile) empty1.style.display = 'none';
 
       const linkSpan = document.createElement('span');
       linkSpan.className = 'col-link';
@@ -95,12 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
       linkSpan.style.visibility = 'hidden';
       linkSpan.style.paddingTop = '0';
 
-      if (item.image) {
-        const images = Array.isArray(item.image) ? item.image : [item.image];
-        if (images.length > 0 && images[0] !== '') {
-          const carousel = createCarousel(images);
-          linkSpan.appendChild(carousel);
-        }
+      if (hasImage) {
+        const carousel = createCarousel(images);
+        linkSpan.appendChild(carousel);
       }
 
       let content = '';
@@ -109,12 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasBoth) content += `<div style="height: 1em;"></div>`;
       }
       if (hasLink) {
-        if (Array.isArray(item.link)) {
-          item.link.forEach((l, index) => {
-            content += `<a href="${l}" target="_blank">${index + 1}. ${l}</a><div style="height: 0.3em;"></div>`;
+        if (links.length > 1) {
+          links.forEach((l, i) => {
+            content += `<a href="${l}" target="_blank">${i + 1}. ${l}</a><div style="height: 0.3em;"></div>`;
           });
         } else {
-          content += `<a href="${item.link}" target="_blank">${item.link}</a>`;
+          content += `<a href="${links[0]}" target="_blank">${links[0]}</a>`;
         }
       }
       if (hasContent) content += `<div style="height: 1em;"></div>`;
@@ -169,15 +167,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  renderItems('all');
+  // data.json 불러오기
+  fetch('data.json')
+    .then(r => r.json())
+    .then(data => {
+      const items = data.items;
+      let currentFilter = 'all';
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      window.activeFilter = btn.dataset.filter;
-      showBackgroundImage(window.activeFilter);
-      renderItems(btn.dataset.filter);
+      renderItems(items, currentFilter);
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          window.activeFilter = currentFilter;
+          showBackgroundImage(currentFilter);
+          renderItems(items, currentFilter);
+        });
+      });
     });
-  });
 });

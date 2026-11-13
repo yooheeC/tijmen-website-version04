@@ -1,0 +1,61 @@
+backend:
+    name: git-gateway
+    branch: main
+
+media_folder: works
+public_folder: works
+
+collections:
+    - name: works
+      label: Works
+      files:
+          - name: data
+            label: All Works
+            file: data.json
+            fields:
+                - name: items
+                  label: Items
+                  widget: list
+                  summary: "{{fields.date}} — {{fields.col2}}"
+                  fields:
+                      - name: date
+                        label: Year
+                        widget: string
+                      - name: category
+                        label: Category
+                        widget: select
+                        options:
+                            - { label: "Exhibitions", value: "exhibitions" }
+                            - { label: "Edited", value: "edited" }
+                            - { label: "Criticism", value: "criticism" }
+                            - { label: "Writings", value: "writings" }
+                            - { label: "Commissioned", value: "commissioned" }
+                      - name: col1
+                        label: Category Label
+                        widget: string
+                      - name: col2
+                        label: Content
+                        widget: string
+                        hint: "이탤릭: <i>텍스트</i>"
+                      - name: link
+                        label: Links
+                        widget: list
+                        required: false
+                        default: []
+                        field:
+                            name: url
+                            widget: string
+                      - name: description
+                        label: Description
+                        widget: text
+                        required: false
+                        default: ""
+                      - name: image
+                        label: Images
+                        widget: list
+                        required: false
+                        default: []
+                        field:
+                            name: src
+                            widget: string
+                            hint: "예: works/filename.jpg"

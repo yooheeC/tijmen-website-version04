@@ -172,7 +172,7 @@ const items = [
     date: "2025",
     category: "exhibitions",
     col1: "Exhibitions",
-    col2: `<i>Anselm Kiefer: Sag mir wo die Blumen sind.</i> Stedelijk Museum Amsterdam & Van Gogh Museum Amsterdam (7 March 2025 – 9 June 2025). Curatorial Assistant.`,
+    col2: `<i>Anselm Kiefer: Sag mir wo die Blumen sind.</i> Stedelijk Museum Amsterdam & Van Gogh Museum Amsterdam (7 March 2025 – 9 June 2025). Curatorial Intern.`,
     link: "https://www.stedelijk.nl/en/exhibitions/anselm-kiefer-en",
     description: "",
     image: ""
@@ -190,7 +190,7 @@ const items = [
     date: "2024",
     category: "exhibitions",
     col1: "Exhibitions",
-    col2: `The Don Quixote Sculpture Hall. Stedelijk Museum Amsterdam (16 November 2024). Curatorial Assistant.`,
+    col2: `The Don Quixote Sculpture Hall. Stedelijk Museum Amsterdam (16 November 2024). Curatorial Intern.`,
     link: "https://www.stedelijk.nl/en/don-quixote-sculpture-hall",
     description: "",
     image: ""
@@ -199,7 +199,7 @@ const items = [
     date: "2024",
     category: "exhibitions",
     col1: "Exhibitions",
-    col2: `stanley brouwn. Stedelijk Museum Amsterdam (31 May 2024 – 1 September 2024). Curatorial Assistant.`,
+    col2: `stanley brouwn. Stedelijk Museum Amsterdam (31 May 2024 – 1 September 2024). Curatorial Intern.`,
     link: "https://www.stedelijk.nl/en/exhibitions/stanley-brouwn-en",
     description: "",
     image: ""
@@ -208,7 +208,7 @@ const items = [
     date: "2024",
     category: "exhibitions",
     col1: "Exhibitions",
-    col2: `Ana Lupas: <i>On This Side of the River Elbe.</i> Stedelijk Museum Amsterdam (9 May 2024 – 15 September 2024). Curatorial Assistant.`,
+    col2: `Ana Lupas: <i>On This Side of the River Elbe.</i> Stedelijk Museum Amsterdam (9 May 2024 – 15 September 2024). Curatorial Intern.`,
     link: "https://www.stedelijk.nl/en/exhibitions/ana-lupas-en",
     description: "",
     image: ""
