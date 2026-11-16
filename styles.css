@@ -96,6 +96,21 @@ body::before {
 
 /* ==========================================================================
    Custom cursor
+
+   커서는 두 가지 모드 중 하나로만 동작합니다. 둘은 절대 겹치지 않습니다.
+
+   1) 커스텀 커서 모드  — body 에 .cursor-hidden 이 붙은 상태.
+      진짜 커서를 전부 숨기고 검정 원(.custom-cursor)만 보여줍니다.
+      목록 화면, 그리고 biography 의 Images off 상태가 여기에 해당합니다.
+
+   2) 사진 넘기기 모드  — body 에 .cursor-hidden 이 없는 상태.
+      진짜 커서가 w-resize / e-resize 를 보여주고,
+      button.js 가 검정 원을 숨깁니다.
+      biography 를 Images on 으로 열었을 때가 여기에 해당합니다.
+
+   예외는 작업 목록의 이미지 캐러셀뿐입니다. 거기서는 1번 모드 안에서도
+   좌우 화살표를 써야 해서, button.js 가 검정 원을 숨기고
+   아래 .item-carousel 규칙이 화살표를 되살립니다.
    ========================================================================== */
 
 .custom-cursor {
@@ -113,10 +128,7 @@ body.cursor-hidden * {
     cursor: none !important;
 }
 
-body.cursor-hidden .biography-container:not(.hidden) {
-    cursor: w-resize !important;
-}
-
+/* 작업 목록의 이미지 캐러셀: 커스텀 커서 모드 안에서의 유일한 예외 */
 body.cursor-hidden .item-carousel div {
     cursor: w-resize !important;
 }
@@ -192,20 +204,9 @@ body.bio-open .topbar {
     visibility: hidden;
 }
 
-/* Both toggles stay in the layout at all times and are only made
+/* The toggle stays in the layout at all times and is only made
    invisible — the topbars have no fixed height, so removing a button
    would change their height and push everything below it. */
-
-/* Drawings toggle: only a filter other than "All" brings it out. */
-.drawings-toggle-btn {
-    display: block;
-    visibility: hidden;
-    color: var(--main-color);
-}
-
-body:has(.filter-btn.active:not([data-filter="all"])):not(.bio-open) .drawings-toggle-btn {
-    visibility: visible;
-}
 
 /* Images toggle: button.js sets .visible while the modal is open. */
 .img-toggle-btn {
@@ -348,19 +349,20 @@ main .list-grid {
 /* Only items carrying a link, description or image react to the cursor */
 .list-grid .col2.clickable {
     cursor: pointer;
+    color: inherit;
 }
 
 .list-grid .col2.clickable:hover {
     color: var(--main-color);
 }
 
-/* Once the drawer is open the title stops reacting —
-   from then on each link highlights on its own (global a:hover) */
-.list-grid .col2.clickable.open:hover {
-    color: inherit;
-}
+/* --- 서랍 안 내용 --------------------------------------------------------
+   filter.js 가 제목·분류·설명을 한 묶음으로 파랗게 칠합니다.
+   링크는 그 묶음에서 빠져 있어서, 아래 :hover 로 하나씩 반응합니다.
+   ------------------------------------------------------------------------ */
 
 .col-link {
+    display: block;
     padding-bottom: 0.5rem;
 }
 
@@ -369,9 +371,14 @@ main .list-grid {
 }
 
 .col-link a {
+    color: inherit;
     border-bottom: 1px solid currentColor;
     padding-bottom: 1px;
     text-decoration: none;
+}
+
+.col-link a:hover {
+    color: var(--main-color);
 }
 
 img + p {
@@ -397,24 +404,7 @@ body:has(.filter-btn.active:not([data-filter="all"])) .credit {
     display: none;
 }
 
-.col-link {
-    display: block;
-    padding-bottom: 0.5rem;
-}
-
-.col2.clickable {
-    color: inherit;
-}
-
 body.bio-open main,
 body.bio-open .credit {
     visibility: hidden;
 }
-
-.col-link a {
-  color: inherit;
-}
-.col-link a:hover {
-  color: blue;
-}
-
