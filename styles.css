@@ -124,6 +124,14 @@ body::before {
     transform: translate(-50%, -50%);
 }
 
+/* body 와 html 자신도 반드시 포함해야 합니다.
+
+   `body.cursor-hidden *` 는 body 의 "자식들"만 가리킵니다.
+   상단바는 pointer-events: none 이라 마우스 이벤트가 그 뒤의 body 로
+   떨어지는데, body 가 빠져 있으면 거기서 기본 화살표가 되살아나
+   검정 원과 겹쳐 보입니다. */
+html:has(body.cursor-hidden),
+body.cursor-hidden,
 body.cursor-hidden * {
     cursor: none !important;
 }
