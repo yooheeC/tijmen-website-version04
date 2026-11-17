@@ -18,26 +18,26 @@ document.addEventListener('DOMContentLoaded', () => {
   let carouselVisible = true;
   let carouselIndex   = 0;
 
-  // 배경 그림은 항상 켜둡니다.
-  // 예전에는 상단바의 버튼으로 끌 수 있었지만 그 버튼은 없앴습니다.
-  // background.js 가 이 값을 보고 있으므로 변수 자체는 남겨둡니다.
+  // The background drawings are always on.
+  // A topbar button used to switch them off; that button has been removed.
+  // background.js still reads this flag, so the variable stays.
   window.drawingsEnabled = true;
 
   /* ---------------------------------------------------------------
-     커서 상태를 한 곳에서 결정합니다.
+     Cursor state, decided in one place.
 
-     예전에는 커서를 켜고 끄는 코드가 네 군데에 흩어져 있어서
-     서로 어긋났습니다. 이제는 "지금 상태가 어떤가"만 보고
-     한 번에 정리합니다.
+     The code that switched the cursor on and off used to be spread
+     across four handlers, which fell out of step with each other.
+     This reads the current state and settles everything at once.
 
-       넘기기 가능 → 진짜 커서(좌우 화살표)를 쓰고 커스텀 커서는 숨김
-       그 외       → 커스텀 커서를 쓰고 진짜 커서는 숨김
+       Can page  -> real cursor shows the arrows, custom cursor hidden
+       Otherwise -> custom cursor shows, real cursor hidden
   --------------------------------------------------------------- */
   function bioIsOpen() {
     return !!biographyContainer && !biographyContainer.classList.contains('hidden');
   }
 
-  // 지금 좌우로 넘길 수 있는 상태인가
+  // Can the carousel be paged left and right right now?
   function canPage() {
     return isDesktop() && bioIsOpen() && carouselVisible;
   }
@@ -51,15 +51,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (canPage()) {
-      // 사진을 넘기는 중: 진짜 커서가 좌우 화살표를 보여줍니다
+      // Paging through photos: the real cursor shows the arrows
       if (customCursor) customCursor.style.display = 'none';
       document.body.classList.remove('cursor-hidden');
     } else {
-      // 그 외 모든 경우: 커스텀 커서만 보이게 합니다
+      // Everywhere else: the custom cursor is the only one shown
       if (customCursor) customCursor.style.display = 'block';
       document.body.classList.add('cursor-hidden');
       if (biographyContainer) biographyContainer.style.removeProperty('cursor');
     }
+  }
+
+  /* ---------------------------------------------------------------
+     Biography text
+
+     The text used to sit in index.html. It now comes from bio.json so
+     it can be edited in the CMS.
+
+     In bio.json the paragraphs are separated by a blank line. They are
+     joined here with <br><br>, which is how the original markup spaced
+     them, so the section looks exactly as it did before.
+  --------------------------------------------------------------- */
+  const biographyText = document.querySelector('.biography p');
+
+  if (biographyText) {
+    fetch('bio.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Could not load bio.json (' + res.status + ')');
+        return res.json();
+      })
+      .then(data => {
+        const raw = (data && typeof data.text === 'string') ? data.text : '';
+        const paragraphs = raw.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+        // The text carries <i> tags, so it goes in as HTML rather than as text
+        biographyText.innerHTML = paragraphs.join('<br><br>');
+      })
+      .catch(err => {
+        console.error(err);
+        // Leave the section empty rather than letting the page break
+      });
   }
 
   /* ---------------------------------------------------------------
@@ -158,10 +188,10 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------------------------------------------------------------
      Biography carousel helpers
 
-     [변경] 사진 개수는 index.html 의 <img> 태그를 직접 세어서 씁니다.
-     예전에는 아래 목록의 길이(19)로 계산했는데 실제 <img>는 18개라서,
-     한 바퀴에 한 번씩 아무 사진도 안 보이는 빈 칸이 생겼습니다.
-     이제 목록과 HTML이 어긋나도 빈 칸이 생기지 않습니다.
+     The number of photos is counted from the <img> tags in index.html.
+     Paging used to use the length of the list below (19) while the HTML
+     held 18 images, which left one blank step on every full cycle.
+     Counting the DOM means a mismatch can no longer produce a blank.
   --------------------------------------------------------------- */
   function carouselCount() {
     return carousel ? carousel.querySelectorAll('img').length : 0;
@@ -189,8 +219,9 @@ document.addEventListener('DOMContentLoaded', () => {
     carousel.classList.toggle('visible', open && carouselVisible);
   }
 
-  // 넘기기를 막아야 하는 곳인지 판단합니다.
-  // 커서 모양과 실제 동작이 항상 같은 기준을 쓰도록 함수로 뺐습니다.
+  // Is this a spot where paging should not happen?
+  // Kept as one function so the cursor shape and the click behaviour
+  // always follow the same rule.
   function isPagingBlocked(e) {
     if (!carouselVisible) return true;
     if (e.target.closest('.bio-topbar')) return true;
@@ -218,11 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------------------------------------------------------------
-     [변경] 좌우 화살표 커서를 "실제로 넘길 수 있는 곳"에서만 보여줍니다.
+     Show the left/right arrows only where paging actually works.
 
-     예전에는 biography 영역 전체에 !important 로 칠해서,
-     이메일·인스타그램 링크나 상단 버튼 위에서도 화살표가 떴습니다.
-     클릭해도 넘어가지 않는 자리였으니 커서가 거짓말을 한 셈입니다.
+     The arrows used to be painted across the whole biography area with
+     !important, so they appeared over the email and Instagram links and
+     over the topbar buttons as well. Clicking there paged nothing, so
+     the cursor was lying about what a click would do.
   --------------------------------------------------------------- */
   function handleMouseMove(e) {
     if (!biographyContainer) return;
@@ -232,9 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // [변경] 클릭 판정과 똑같이 컨테이너의 가운데를 기준으로 삼습니다.
-    // 예전에는 커서는 화면 기준, 클릭은 컨테이너 기준이라
-    // 둘이 어긋날 수 있었습니다.
+    // Use the container's midpoint, exactly as the click handler does.
+    // The cursor used to split on the window midpoint while the click
+    // split on the container's, so the two could disagree.
     const rect = biographyContainer.getBoundingClientRect();
     const mid  = rect.left + rect.width / 2;
     const side = e.clientX < mid ? 'w-resize' : 'e-resize';
@@ -268,8 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
           if (imgToggleBtn) {
             imgToggleBtn.textContent = carouselVisible ? 'Images off' : 'Images on';
           }
-          // [변경] 다시 열었을 때 images off 상태가 그대로 이어지도록
-          // 클래스를 현재 상태에 맞춰 붙여줍니다.
+          // Re-apply the class from the current state, so an images-off
+          // session survives closing and reopening the modal.
           biographyContainer.classList.toggle('images-off', !carouselVisible);
           document.body.classList.toggle('bio-images-off', !carouselVisible && isDesktop());
         } else {
@@ -324,9 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
       biographyContainer.classList.toggle('images-off', !carouselVisible);
       document.body.classList.toggle('bio-images-off', !carouselVisible);
 
-      // [변경] 커서 처리를 여기서 직접 하지 않고 한 곳에 맡깁니다.
-      // 예전에는 커스텀 커서를 켜면서 진짜 커서를 다시 숨기는 걸 빠뜨려서
-      // 커서가 두 개로 보였습니다.
+      // Leave the cursor to the one function above rather than setting it
+      // here. This handler used to show the custom cursor without hiding
+      // the real one again, which left two cursors on screen.
       applyCursorState();
     });
   }

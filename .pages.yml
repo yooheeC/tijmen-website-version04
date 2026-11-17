@@ -3,12 +3,30 @@
 #  Location: repository root (same folder as index.html)
 # ============================================================
 
+# Where uploaded images go.
+# The existing work images live in works/, so new uploads join them
+# and the saved paths keep the same shape: works/filename.jpg
 media:
     input: works
     output: works
     extensions: [jpg, jpeg, png, webp]
 
+# The editing menu the client sees.
 content:
+    - name: biography
+      label: Biography
+      type: file
+      path: bio.json
+      format: json
+      fields:
+          - name: text
+            label: Biography
+            type: text
+            required: true
+            description: "Leave a blank line between paragraphs. For italics, wrap the text in <i> and </i> — for example: <i>De Witte Raaf</i>"
+
+    # data.json is a top-level array, so list: true is set on the entry
+    # and the fields below describe a single item.
     - name: works
       label: Works
       type: file
