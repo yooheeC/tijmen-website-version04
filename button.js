@@ -198,63 +198,65 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------------------------------------------------------------
-     Preloading
+     Loading the carousel photos
 
-     The images carry loading="lazy", which keeps them off the first
-     page load. On its own that makes paging flicker: the next photo
-     only starts downloading once it is clicked.
+     The photos carry loading="lazy", which keeps them off the first
+     page load. On its own that makes paging flicker: a photo only
+     starts downloading on the click that reveals it.
 
-     So the neighbours are fetched ahead of time. Asking the browser
-     for a URL puts it in the cache, and the <img> then renders from
-     the cache with nothing to wait for.
+     So once the modal is open they are switched to eager, which starts
+     the download right away. The current photo and its neighbours go
+     first; the rest follow a moment later, so the next click always
+     has its photo ready.
+
+     This works on the <img> elements themselves, not on the browser
+     cache, so a server that sends no-cache headers — a local dev
+     server, for instance — cannot defeat it.
   --------------------------------------------------------------- */
-  const preloaded = new Set();
+  function startLoading(img) {
+    if (!img) return;
 
-  function preload(src) {
-    if (!src || preloaded.has(src)) return;
-    preloaded.add(src);
-    const img = new Image();
-    img.src = src;
+    if (img.loading === 'lazy') {
+      img.loading = 'eager';
+      if (!img.complete) {
+        // Some browsers do not act on the attribute change alone.
+        // Re-assigning the source starts the fetch in those too.
+        const src = img.getAttribute('src');
+        if (src) img.src = src;
+      }
+    }
+
+    // Having the file is not the same as being ready to draw it. A
+    // photo sitting at opacity 0 is not decoded, so the browser only
+    // unpacks the JPEG at the moment it is revealed — which is the
+    // flicker. decode() does that work ahead of time, off the main
+    // thread, so the switch has nothing left to do.
+    if (img.decode) img.decode().catch(() => {});
   }
 
-  // The photos on either side of the current one, plus one further
-  // ahead for someone clicking quickly through.
-  function preloadAround() {
+  // The current photo, the one on each side, and one further ahead
+  // for someone clicking quickly through.
+  function loadNeighbours() {
     if (!carousel) return;
     const imgs = carousel.querySelectorAll('img');
     const count = imgs.length;
     if (!count) return;
 
-    [1, -1, 2].forEach(offset => {
-      const i = (carouselIndex + offset + count * 2) % count;
-      preload(imgs[i].getAttribute('src'));
+    [0, 1, -1, 2].forEach(offset => {
+      startLoading(imgs[(carouselIndex + offset + count * 2) % count]);
     });
   }
 
-  // Once the modal is open, walk through the rest in the background,
-  // one at a time so the network is not flooded. By the time anyone
-  // reaches the far side of the carousel it is already cached.
-  let backgroundPreloadStarted = false;
+  // Everything else, shortly after. The delay lets the photos above
+  // claim the connection first.
+  let restQueued = false;
 
-  function preloadAllInBackground() {
-    if (backgroundPreloadStarted || !carousel) return;
-    backgroundPreloadStarted = true;
-
-    const sources = Array.from(carousel.querySelectorAll('img'))
-      .map(img => img.getAttribute('src'))
-      .filter(Boolean);
-
-    let i = 0;
-    const next = () => {
-      if (i >= sources.length) return;
-      const src = sources[i++];
-      if (preloaded.has(src)) return next();
-      preloaded.add(src);
-      const img = new Image();
-      img.onload = img.onerror = next;
-      img.src = src;
-    };
-    next();
+  function loadRestSoon() {
+    if (restQueued || !carousel) return;
+    restQueued = true;
+    setTimeout(() => {
+      carousel.querySelectorAll('img').forEach(startLoading);
+    }, 1200);
   }
 
   function updateCarousel() {
@@ -272,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    preloadAround();
+    loadNeighbours();
   }
 
   function syncCarousel() {
@@ -358,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
         syncCarousel();
         updateCarousel();
 
-        if (open && carouselVisible) preloadAllInBackground();
+        if (open && carouselVisible) { loadNeighbours(); loadRestSoon(); }
 
         if (open) {
           if (imgToggleBtn) {
