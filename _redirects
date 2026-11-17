@@ -1,0 +1,13 @@
+# Netlify redirect rules
+# Location: repository root (same folder as index.html)
+# The filename starts with an underscore and has no extension.
+#
+# Why this is here:
+#   The site answers both at tijmenterkeurs.netlify.app and at
+#   tijmenterkeurs.nl. To a search engine that looks like two sites
+#   carrying identical content, and it has to guess which to show.
+#   These rules send anyone arriving on the netlify.app address to
+#   the real one.
+
+https://tijmenterkeurs.netlify.app/*  https://www.tijmenterkeurs.nl/:splat  301!
+http://tijmenterkeurs.netlify.app/*   https://www.tijmenterkeurs.nl/:splat  301!

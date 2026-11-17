@@ -1,0 +1,7 @@
+# Instructions for search engine crawlers.
+# Location: repository root (same folder as index.html)
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.tijmenterkeurs.nl/sitemap.xml
