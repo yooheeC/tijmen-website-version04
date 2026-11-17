@@ -197,6 +197,66 @@ document.addEventListener('DOMContentLoaded', () => {
     return carousel ? carousel.querySelectorAll('img').length : 0;
   }
 
+  /* ---------------------------------------------------------------
+     Preloading
+
+     The images carry loading="lazy", which keeps them off the first
+     page load. On its own that makes paging flicker: the next photo
+     only starts downloading once it is clicked.
+
+     So the neighbours are fetched ahead of time. Asking the browser
+     for a URL puts it in the cache, and the <img> then renders from
+     the cache with nothing to wait for.
+  --------------------------------------------------------------- */
+  const preloaded = new Set();
+
+  function preload(src) {
+    if (!src || preloaded.has(src)) return;
+    preloaded.add(src);
+    const img = new Image();
+    img.src = src;
+  }
+
+  // The photos on either side of the current one, plus one further
+  // ahead for someone clicking quickly through.
+  function preloadAround() {
+    if (!carousel) return;
+    const imgs = carousel.querySelectorAll('img');
+    const count = imgs.length;
+    if (!count) return;
+
+    [1, -1, 2].forEach(offset => {
+      const i = (carouselIndex + offset + count * 2) % count;
+      preload(imgs[i].getAttribute('src'));
+    });
+  }
+
+  // Once the modal is open, walk through the rest in the background,
+  // one at a time so the network is not flooded. By the time anyone
+  // reaches the far side of the carousel it is already cached.
+  let backgroundPreloadStarted = false;
+
+  function preloadAllInBackground() {
+    if (backgroundPreloadStarted || !carousel) return;
+    backgroundPreloadStarted = true;
+
+    const sources = Array.from(carousel.querySelectorAll('img'))
+      .map(img => img.getAttribute('src'))
+      .filter(Boolean);
+
+    let i = 0;
+    const next = () => {
+      if (i >= sources.length) return;
+      const src = sources[i++];
+      if (preloaded.has(src)) return next();
+      preloaded.add(src);
+      const img = new Image();
+      img.onload = img.onerror = next;
+      img.src = src;
+    };
+    next();
+  }
+
   function updateCarousel() {
     if (!carousel) return;
 
@@ -211,6 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
         img.classList.toggle('active', i === carouselIndex);
       }
     });
+
+    preloadAround();
   }
 
   function syncCarousel() {
@@ -295,6 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         syncCarousel();
         updateCarousel();
+
+        if (open && carouselVisible) preloadAllInBackground();
 
         if (open) {
           if (imgToggleBtn) {

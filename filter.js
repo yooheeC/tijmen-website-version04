@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.list-grid');
   const filterBtns = document.querySelectorAll('.filter-btn');
 
-  // ── [추가] category 로 col1 라벨을 자동으로 만듭니다 ──────────────
-  // 예전에는 data.js 에 col1: "Edited" 가 따로 들어있었지만,
-  // category 와 항상 똑같은 값이라 클라이언트가 두 번 입력할 필요가
-  // 없도록 여기서 만들어 씁니다.
+  // Build the col1 label from the category.
+  // data.js used to carry col1: "Edited" as a separate field, but it was
+  // always just the category capitalised. Deriving it here leaves one
+  // source of truth, so the two can never drift apart.
   const CATEGORY_LABELS = {
     exhibitions: 'Exhibitions',
     edited: 'Edited',
@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function labelFor(category) {
     const key = String(category || '').toLowerCase();
     if (CATEGORY_LABELS[key]) return CATEGORY_LABELS[key];
-    // 새 분류가 생겨도 첫 글자만 대문자로 바꿔서 표시
+    // Unknown category: fall back to capitalising the first letter
     return key ? key.charAt(0).toUpperCase() + key.slice(1) : '';
   }
 
-  // ── [추가] 값을 항상 "빈 것이 걸러진 배열"로 바꿔줍니다 ───────────
-  // link, image 가 글자 하나일 때도, 목록일 때도, 비어 있을 때도
-  // 모두 똑같이 처리되게 만드는 안전장치입니다.
+  // Normalise a value to an array with empty entries stripped out.
+  // link and image may arrive as a single string, as a list, or empty;
+  // this lets the rest of the code treat all three the same way.
   function toArray(value) {
     if (Array.isArray(value)) {
       return value.filter(v => v && String(v).trim() !== '');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return [value];
   }
 
-  // ── [변경] 목록 데이터. data.json 을 읽어온 뒤 채워집니다 ─────────
+  // The list data. Filled in once data.json has loaded.
   let items = [];
 
   function createCarousel(images) {
@@ -49,12 +49,19 @@ document.addEventListener('DOMContentLoaded', () => {
     images.forEach((src, i) => {
       const img = document.createElement('img');
       img.src = src;
-      // [추가] 첫 장만 바로 받고, 나머지는 넘길 때 받습니다
-      img.loading = i === 0 ? 'eager' : 'lazy';
       img.decoding = 'async';
       img.style.width = '100%';
       img.style.display = i === 0 ? 'block' : 'none';
       wrapper.appendChild(img);
+    });
+
+    // This carousel is only built when the entry is first opened, so by
+    // now the visitor has shown they want these images. Fetch the rest
+    // ahead of time: a hidden image would otherwise only start loading
+    // on the click that reveals it, which shows as a flicker.
+    images.slice(1).forEach(src => {
+      const preloader = new Image();
+      preloader.src = src;
     });
 
     const leftZone = document.createElement('div');
@@ -98,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const span1 = document.createElement('span');
       span1.className = 'col1';
-      // [변경] item.col1 → category 에서 자동 생성
+      // Derived from category rather than stored on the item
       span1.textContent = labelFor(item.category);
 
       if (isMobile) {
@@ -109,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // ── [변경] 빈 배열을 "값이 있다"고 잘못 판단하던 부분 수정 ─────
+      // An empty array is truthy in JavaScript, so length must be checked
       const links = toArray(item.link);
       const images = toArray(item.image);
 
@@ -121,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const span2 = document.createElement('span');
       span2.className = hasContent ? 'col2 clickable' : 'col2';
-      // col2 에는 <i> 같은 태그가 들어있으므로 innerHTML 을 그대로 씁니다
+      // col2 carries <i> tags, so it goes in as HTML rather than as text
       span2.innerHTML = item.col2;
 
       const empty1 = document.createElement('span');
@@ -139,14 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
       linkSpan.style.visibility = 'hidden';
       linkSpan.style.paddingTop = '0';
 
-      // [변경] 이미지 캐러셀은 여기서 만들지 않습니다.
-      // 사용자가 그 항목을 처음 펼칠 때 만들어서, 보지도 않은 이미지를
-      // 미리 다운로드하지 않게 합니다. (아래 클릭 핸들러 참고)
+      // The image carousel is not built here. It is built the first time
+      // the entry is opened, so images nobody looks at are never
+      // downloaded. See the click handler below.
       let carouselBuilt = false;
 
-      // [추가] 함께 파래지는 묶음: 분류 + 제목 + 설명.
-      // 링크는 일부러 뺍니다. 링크는 각자 hover 되어야 하니까요.
-      // (linkSpan 자체를 칠하면 그 안의 링크까지 같이 물들어서 안 됩니다)
+      // The group that highlights together: category, title and description.
+      // Links are deliberately left out so each one can react on its own.
+      // Colouring linkSpan itself would bleed into the links inside it.
       function highlightGroup() {
         const group = [span1, span2, empty1];
         const desc = linkSpan.querySelector('.col-desc');
@@ -166,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasBoth) content += `<div style="height: 1em;"></div>`;
       }
       if (hasLink) {
-        // [유지] 링크가 하나면 번호 없이, 여러 개면 1. 2. 3. 번호를 붙입니다
+        // One link: no number. Several: number them 1. 2. 3.
         if (links.length === 1) {
           content += `<a href="${links[0]}" target="_blank">${links[0]}</a>`;
         } else {
@@ -183,8 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       rowElements.forEach(el => {
         el.addEventListener('mouseover', (ev) => {
-          // [변경] 마우스가 링크 위에 있으면 묶음은 칠하지 않습니다.
-          // 그래야 링크 하나만 따로 반응합니다 (링크 색은 CSS가 처리).
+          // Over a link the group stays unhighlighted, so only that link
+          // reacts. The link's own colour is handled in CSS.
           const overLink = !!(ev.target.closest && ev.target.closest('a'));
           if (hasContent) {
             setHighlight(!overLink);
@@ -205,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMobile && !hasContent) return;
 
         if (empty1.style.visibility === 'hidden') {
-          // [추가] 처음 펼칠 때 이미지 캐러셀을 만듭니다.
-          // 설명·링크보다 위에 와야 하므로 맨 앞에 끼워 넣습니다.
+          // Build the carousel the first time this entry is opened.
+          // It belongs above the description and links, so insert it first.
           if (hasImage && !carouselBuilt) {
             linkSpan.insertBefore(createCarousel(images), linkSpan.firstChild);
             carouselBuilt = true;
@@ -231,12 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── [추가] data.json 을 읽어온 뒤에 목록을 그립니다 ───────────────
-  // 예전에는 data.js 가 items 변수를 미리 만들어줬지만, 이제는
-  // 파일을 불러오는 데 시간이 걸리므로 다 읽은 다음에 그려야 합니다.
+  // Load data.json, then draw the list.
+  // data.js used to define items before this script ran. Fetching a file
+  // takes time, so the list can only be drawn once it has arrived.
   fetch('data.json')
     .then(res => {
-      if (!res.ok) throw new Error('data.json 을 불러올 수 없습니다 (' + res.status + ')');
+      if (!res.ok) throw new Error('Could not load data.json (' + res.status + ')');
       return res.json();
     })
     .then(data => {
@@ -245,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(err => {
       console.error(err);
-      // 데이터를 못 읽어도 페이지 전체가 깨지지는 않게 비워둡니다
+      // Leave the list empty rather than letting the whole page break
       grid.innerHTML = '';
     });
 
